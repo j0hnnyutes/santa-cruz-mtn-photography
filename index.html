@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Santa Cruz Mountain Photography — Coming Soon</title>
+  <meta name="description" content="Santa Cruz Mountain Photography — a new site is on the way. Get in touch." />
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg">
+    <img src="images/hero.jpg" alt="Windswept cypress trees on a coastal bluff above the Pacific Ocean, Santa Cruz, California" />
+  </div>
+  <div class="overlay"></div>
+
+  <main class="content">
+    <header class="brand">
+      <span class="brand-mark">Santa Cruz Mountain</span>
+      <span class="brand-sub">P H O T O G R A P H Y</span>
+    </header>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <h1>Coming Soon</h1>
+    <p class="tagline">A new home for the work is on its way.</p>
+
+    <a class="cta" href="mailto:law138@santacruzmtnphotography.com">
+      Get in touch
+    </a>
+
+    <footer class="footer">
+      <a href="mailto:law138@santacruzmtnphotography.com">law138@santacruzmtnphotography.com</a>
+      <span class="dot">·</span>
+      <span>&copy; <span id="year"></span> Santa Cruz Mountain Photography</span>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
