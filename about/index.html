@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Jason Lawton — Santa Cruz Mountain Photography</title>
+  <meta name="description" content="Jason Lawton is a Santa Cruz Mountains-based photographer specializing in intimate portraits, live events, and aerial drone work." />
+  <meta name="theme-color" content="#f6f2ea" />
+
+  <meta property="og:type" content="profile" />
+  <meta property="og:site_name" content="Santa Cruz Mountain Photography" />
+  <meta property="og:url" content="https://santacruzmtnphotography.com/about" />
+  <meta property="og:title" content="About Jason Lawton — Santa Cruz Mountain Photography" />
+  <meta property="og:description" content="A Santa Cruz Mountains-based photographer specializing in intimate portraits, live events, and aerial drone work." />
+  <meta property="og:image" content="https://santacruzmtnphotography.com/images/jason-portrait.jpg" />
+  <meta property="og:image:width" content="1400" />
+  <meta property="og:image:height" content="1814" />
+  <meta property="og:image:alt" content="Jason Lawton photographing a shipwreck along the Santa Cruz coastline" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="About Jason Lawton — Santa Cruz Mountain Photography" />
+  <meta name="twitter:description" content="A Santa Cruz Mountains-based photographer specializing in intimate portraits, live events, and aerial drone work." />
+  <meta name="twitter:image" content="https://santacruzmtnphotography.com/images/jason-portrait.jpg" />
+
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../base.css" />
+  <link rel="stylesheet" href="about.css" />
+</head>
+<body class="about-page">
+
+  <a class="site-brand" href="../">Santa Cruz Mountain Photography</a>
+
+  <main class="about">
+    <div class="about-grid">
+
+      <figure class="about-photo reveal">
+        <img
+          src="../images/jason-portrait.jpg"
+          alt="Jason Lawton photographing a shipwreck along the Santa Cruz coastline"
+          loading="eager" />
+      </figure>
+
+      <div class="about-rule" aria-hidden="true"></div>
+
+      <div class="about-copy">
+        <p class="eyebrow reveal">The Photographer</p>
+        <h1 class="reveal">Jason Lawton</h1>
+        <p class="location reveal">Ben Lomond, CA &middot; Santa Cruz Mountains</p>
+        <div class="divider reveal"></div>
+
+        <p class="lede reveal">Hi, I&rsquo;m Jason Lawton, and I live here in the beautiful Santa Cruz Mountains, in the cozy little town of Ben Lomond. I was born and raised in this area with my family: my brother Jon, sister Sarah, father Jeff, and mother Patti. It&rsquo;s truly been a blessing to grow up here and witness the ever&#8209;changing beauty of the seasons, the weather, and the diverse landscape. I&rsquo;ve also had the privilege of raising my four wonderful kids here, which has reignited my passion for photography.</p>
+
+        <p class="reveal">I enjoy heading out into nature to photograph, as well as shooting live music shows and events. The Santa Cruz area is lush with both, and so much more. When I get the chance to travel, I love camping my way around this amazing, scenic country of ours, soaking in the sights I haven&rsquo;t made it to yet.</p>
+
+        <p class="reveal">I specialize in intimate, up&#8209;close photography and candid shots that capture the mood and ambiance of the moment. I also love putting my drone to work, capturing shots and footage you simply couldn&rsquo;t get any other way: for weddings, events, live concerts and shows, land surveying, and more.</p>
+
+        <ul class="specialties reveal">
+          <li>Portraits</li>
+          <li>Events</li>
+          <li>Live Music</li>
+          <li>Aerial &amp; Drone</li>
+          <li>Land Surveying</li>
+        </ul>
+
+        <p class="closing reveal">Reach out with any of your photography or aerial drone needs, for your next party, event, live show, or any other reason you&rsquo;d want a photographer around.</p>
+
+        <a class="cta reveal" href="mailto:law138@santacruzmtnphotography.com">Get in Touch</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <a
+      class="social"
+      href="https://www.facebook.com/profile.php?id=61593217498054&mibextid=wwXIfr"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Santa Cruz Mountain Photography on Facebook">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M22 12.06C22 6.505 17.523 2 12 2S2 6.505 2 12.06c0 5.02 3.657 9.184 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.917 3.777-3.917 1.094 0 2.238.197 2.238.197v2.475h-1.26c-1.243 0-1.63.775-1.63 1.57v1.89h2.773l-.443 2.91h-2.33V22c4.78-.756 8.437-4.92 8.437-9.94Z"/>
+      </svg>
+    </a>
+    <span class="dot">&middot;</span>
+    <a href="mailto:law138@santacruzmtnphotography.com">law138@santacruzmtnphotography.com</a>
+    <span class="dot">&middot;</span>
+    <span>&copy; <span id="year"></span> Santa Cruz Mountain Photography</span>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Subtle fade-up reveal on scroll — progressive enhancement only;
+    // all content is fully visible without JS.
+    if ('IntersectionObserver' in window) {
+      const revealEls = document.querySelectorAll('.reveal');
+      revealEls.forEach(el => el.classList.add('reveal-pending'));
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(el => io.observe(el));
+    }
+  </script>
+</body>
+</html>

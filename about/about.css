@@ -1,0 +1,235 @@
+/* About page — editorial two-column layout, light/warm paper theme.
+   Shared component rules live in ../base.css (dark by default); this page
+   overrides them locally via .about-page so the splash page is unaffected. */
+
+.about-page {
+  --ink: #23211c;
+  --ink-dim: #6d6656;
+  --bg: #f6f2ea;
+  background-color: var(--bg);
+}
+
+/* Re-theme shared components (defined for the dark splash page in base.css)
+   for this page's light palette. */
+.about-page .site-brand {
+  color: var(--ink);
+}
+
+.about-page .divider {
+  background: rgba(35, 33, 28, 0.3);
+}
+
+.about-page .cta {
+  border-color: rgba(35, 33, 28, 0.55);
+  color: var(--ink);
+}
+
+.about-page .cta:hover,
+.about-page .cta:focus-visible {
+  background-color: var(--ink);
+  color: var(--bg);
+}
+
+.about-page .footer {
+  color: rgba(35, 33, 28, 0.65);
+}
+
+.about-page .footer a {
+  border-bottom-color: rgba(35, 33, 28, 0.3);
+}
+
+.about-page .footer a:hover {
+  border-bottom-color: rgba(35, 33, 28, 0.7);
+}
+
+.about-page .social {
+  color: rgba(35, 33, 28, 0.75);
+}
+
+.about-page .social:hover,
+.about-page .social:focus-visible {
+  color: var(--bg);
+  background-color: var(--ink);
+}
+
+/* This page scrolls (unlike the single-viewport splash), so the footer
+   needs to sit in normal document flow rather than pinned to the viewport. */
+.about-page .footer {
+  position: static;
+  margin-top: 5rem;
+  padding: 2rem 4vw 2.5rem;
+}
+
+/* Page layout — plain top-down flow (no viewport-height centering) so long
+   copy never fights the fixed header for space. */
+.about {
+  padding: 3.5rem 6vw 6rem;
+}
+
+.about-grid {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 42%) 1px 1fr;
+  gap: 4.5rem;
+  align-items: start;
+}
+
+.about-photo {
+  margin: 0;
+  position: relative;
+}
+
+.about-photo::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border: 1px solid rgba(35, 33, 28, 0.18);
+  z-index: -1;
+}
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(0.96) contrast(1.02);
+  box-shadow: 0 30px 60px -24px rgba(35, 33, 28, 0.35);
+}
+
+.about-rule {
+  width: 1px;
+  height: 100%;
+  background: rgba(35, 33, 28, 0.14);
+  align-self: stretch;
+}
+
+.about-copy {
+  max-width: 640px;
+}
+
+.eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 0.6rem;
+}
+
+.about-copy h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+}
+
+.location {
+  font-weight: 300;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.about-copy .divider {
+  margin: 1.8rem 0 2rem;
+}
+
+.about-copy p {
+  font-weight: 300;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: #33312a;
+  margin: 0 0 1.4rem;
+}
+
+/* Subtle artistic flourish: an oversized drop cap on the opening line. */
+.lede::first-letter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-style: italic;
+  font-size: 3.4rem;
+  line-height: 0.7;
+  float: left;
+  padding: 0.1rem 0.5rem 0 0;
+  color: var(--ink);
+}
+
+.specialties {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0;
+  margin: 0.6rem 0 2.2rem;
+  padding: 0;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.specialties li {
+  position: relative;
+  padding: 0 0.9rem;
+}
+
+.specialties li:first-child {
+  padding-left: 0;
+}
+
+.specialties li + li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  width: 1px;
+  height: 0.9em;
+  background: rgba(35, 33, 28, 0.25);
+}
+
+.closing {
+  font-style: italic;
+  color: var(--ink-dim) !important;
+}
+
+/* Scroll-reveal — progressive enhancement; content is visible by default
+   so nothing depends on JS running. */
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.reveal-pending.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-pending {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .about {
+    padding: 7rem 7vw 8rem;
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
+  }
+  .about-rule {
+    display: none;
+  }
+  .about-photo {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+}
