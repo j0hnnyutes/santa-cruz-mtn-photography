@@ -87,6 +87,12 @@ a {
   opacity: 0.6;
 }
 
+.social-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
 .social {
   display: inline-flex;
   align-items: center;
