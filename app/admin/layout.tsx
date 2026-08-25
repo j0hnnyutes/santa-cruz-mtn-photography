@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+
+// robots.txt disallows /admin too, but disallow only stops crawling — a
+// URL that gets linked from elsewhere can still show up bare in search
+// results. This meta tag is the actual guarantee against indexing.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false, nocache: true },
+};
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
