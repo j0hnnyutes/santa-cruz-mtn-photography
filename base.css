@@ -146,6 +146,99 @@ a {
   padding: 2rem 4vw 2.5rem;
 }
 
+/* Site nav — fixed header bar, floats over page content (like a hero photo
+   or the top of a scrolling grid) rather than sitting in a solid bar.
+   STAGING: being designed on the gallery page first; once approved this
+   gets added to the splash and about pages too. */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 4vw;
+  background: linear-gradient(180deg, rgba(10, 14, 18, 0.7) 0%, rgba(10, 14, 18, 0) 100%);
+}
+
+.site-nav__brand {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.92;
+  white-space: nowrap;
+  transition: opacity 0.25s ease;
+}
+
+.site-nav__brand:hover,
+.site-nav__brand:focus-visible {
+  opacity: 1;
+}
+
+.site-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.site-nav__links a {
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.site-nav__links a:hover,
+.site-nav__links a:focus-visible {
+  opacity: 1;
+}
+
+.site-nav__cta {
+  border: 1px solid rgba(245, 243, 238, 0.6);
+  padding: 0.5rem 1.15rem;
+  border-radius: 2px;
+  opacity: 1 !important;
+}
+
+.site-nav__cta:hover,
+.site-nav__cta:focus-visible {
+  background-color: var(--ink);
+  color: #14181c;
+}
+
+@media (max-width: 640px) {
+  .site-nav {
+    padding: 1.1rem 5vw;
+    gap: 0.8rem;
+  }
+  .site-nav__brand {
+    font-size: 0.85rem;
+  }
+  .site-nav__links {
+    gap: 1.1rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+  .site-nav__cta {
+    padding: 0.4rem 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-nav__links a:not(.site-nav__cta) {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
   .footer {
     flex-direction: column;
