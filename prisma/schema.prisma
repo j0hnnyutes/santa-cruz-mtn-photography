@@ -1,0 +1,32 @@
+// Santa Cruz Mountain Photography — own Neon Postgres project, entirely
+// separate from santa-cruz-tree-site's database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Single admin identity — no user table. Matches the tree-site pattern:
+// one shared password, stored as a bcrypt hash that can be rotated without
+// a redeploy (falls back to ADMIN_PASSWORD_HASH env var if no row exists).
+model AdminConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Photo {
+  id        String    @id @default(cuid())
+  url       String
+  pathname  String    // Vercel Blob pathname, needed to delete the blob later
+  alt       String    @default("")
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  @@index([order])
+}

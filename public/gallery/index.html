@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Santa Cruz Mountain Photography</title>
+  <meta name="description" content="A gallery of Santa Cruz and Santa Cruz Mountains photography by Jason Lawton — coastal landscapes, live events, portraits, and aerial drone work." />
+  <meta name="theme-color" content="#0a0e12" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Santa Cruz Mountain Photography" />
+  <meta property="og:url" content="https://santacruzmtnphotography.com/gallery/" />
+  <meta property="og:title" content="Gallery — Santa Cruz Mountain Photography" />
+  <meta property="og:description" content="A gallery of Santa Cruz and Santa Cruz Mountains photography by Jason Lawton — coastal landscapes, live events, portraits, and aerial drone work." />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gallery — Santa Cruz Mountain Photography" />
+  <meta name="twitter:description" content="A gallery of Santa Cruz and Santa Cruz Mountains photography by Jason Lawton." />
+
+  <link rel="canonical" href="https://santacruzmtnphotography.com/gallery/" />
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css" />
+  <link rel="stylesheet" href="/gallery/gallery.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "Santa Cruz Mountain Photography Gallery",
+    "url": "https://santacruzmtnphotography.com/gallery/",
+    "about": {
+      "@type": "Photographer",
+      "name": "Jason Lawton",
+      "url": "https://santacruzmtnphotography.com/about/",
+      "areaServed": "Santa Cruz, California"
+    }
+  }
+  </script>
+</head>
+<body class="inner-page">
+
+  <header class="site-nav">
+    <a class="site-nav__brand" href="/">Santa Cruz Mountain Photography</a>
+    <nav class="site-nav__links">
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/gallery/">Gallery</a>
+      <a class="site-nav__cta" href="mailto:law138@santacruzmtnphotography.com">Contact</a>
+    </nav>
+  </header>
+
+  <header class="gallery-intro">
+    <p class="eyebrow">Gallery</p>
+    <p class="gallery-note">Santa Cruz and the Santa Cruz Mountains — coastlines, redwoods, live events, and more.</p>
+  </header>
+
+  <main class="mosaic" id="mosaic" aria-live="polite"></main>
+
+  <footer class="footer">
+    <a href="/">&larr; Back home</a>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">&#8249;</button>
+    <img class="lb-img" id="lbImg" src="" alt="" />
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">&#8250;</button>
+  </div>
+
+  <script>
+    const mosaic = document.getElementById('mosaic');
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    let photos = [];
+    let currentIndex = -1;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lbImg.src = photos[currentIndex].url;
+      lbImg.alt = photos[currentIndex].alt || '';
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function showRelative(delta) {
+      currentIndex = (currentIndex + delta + photos.length) % photos.length;
+      lbImg.src = photos[currentIndex].url;
+      lbImg.alt = photos[currentIndex].alt || '';
+    }
+
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', () => showRelative(-1));
+    document.getElementById('lbNext').addEventListener('click', () => showRelative(1));
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showRelative(-1);
+      if (e.key === 'ArrowRight') showRelative(1);
+    });
+
+    function render() {
+      mosaic.innerHTML = '';
+      photos.forEach((photo, i) => {
+        const tile = document.createElement('button');
+        tile.className = 'tile';
+
+        const img = document.createElement('img');
+        img.src = photo.url;
+        img.alt = photo.alt || '';
+        img.loading = i < 3 ? 'eager' : 'lazy';
+
+        // Justified-row sizing: each tile's flex-grow becomes its image's
+        // own aspect ratio, so every row's tiles always sum to exactly 100%
+        // width (a guarantee of flexbox distribution) — this is what makes
+        // the "no blank spots, ever" property hold regardless of how many
+        // photos or what shapes they are.
+        function setGrow() {
+          if (img.naturalHeight > 0) {
+            tile.style.flexGrow = img.naturalWidth / img.naturalHeight;
+          }
+        }
+        if (img.complete) setGrow();
+        else img.addEventListener('load', setGrow);
+
+        tile.appendChild(img);
+        tile.addEventListener('click', () => openLightbox(i));
+        mosaic.appendChild(tile);
+      });
+    }
+
+    fetch('/api/photos')
+      .then((res) => res.json())
+      .then((data) => {
+        photos = data.photos || [];
+        render();
+      })
+      .catch(() => {
+        mosaic.innerHTML = '<p class="admin-empty" style="padding: 2rem 6vw;">Couldn\'t load the gallery — try refreshing.</p>';
+      });
+  </script>
+</body>
+</html>

@@ -1,3 +1,13 @@
 .vercel
 .env*
 _design-concepts/
+.DS_Store
+
+# Next.js
+.next/
+node_modules/
+next-env.d.ts
+*.tsbuildinfo
+
+# Prisma
+prisma/generated/
