@@ -1,5 +1,11 @@
-/* Gallery page — mosaic grid, images touching (thin gap only), varied tile
-   sizes via grid-column/row spans, dense packing to avoid holes. */
+/* Gallery page — justified-row mosaic. Flexbox, not CSS Grid: each tile's
+   flex-grow is set (via the inline script) to its own image's aspect
+   ratio, so every row's items always sum to exactly 100% width — that's
+   a property of flexbox distribution, not something that can regress into
+   a gap the way CSS Grid's "dense" auto-placement can. Row height is
+   fixed; width varies per image's aspect ratio, giving the varied
+   "random" sizing without ever leaving a hole. Works automatically for
+   any future set of photos — no per-image span authoring needed. */
 
 .gallery-intro {
   padding: 6rem 6vw 1.5rem;
@@ -23,10 +29,9 @@
 }
 
 .mosaic {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 380px;
-  grid-auto-flow: dense;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   gap: 8px;
   padding: 1.5rem 8px 8px;
   max-width: 2200px;
@@ -42,21 +47,11 @@
   background: #10151a;
   cursor: pointer;
   overflow: hidden;
-  grid-column: span 1;
-  grid-row: span 1;
-}
-
-.tile.wide {
-  grid-column: span 2;
-}
-
-.tile.tall {
-  grid-row: span 2;
-}
-
-.tile.big {
-  grid-column: span 2;
-  grid-row: span 2;
+  height: 380px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  min-width: 220px;
 }
 
 .tile img {
@@ -80,22 +75,20 @@
 }
 
 @media (max-width: 1100px) {
-  .mosaic {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 300px;
+  .tile {
+    height: 300px;
+    min-width: 180px;
   }
 }
 
 @media (max-width: 700px) {
   .mosaic {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 220px;
     gap: 4px;
     padding: 1rem 4px 4px;
   }
-  .tile.big {
-    grid-column: span 2;
-    grid-row: span 2;
+  .tile {
+    height: 220px;
+    min-width: 140px;
   }
 }
 
