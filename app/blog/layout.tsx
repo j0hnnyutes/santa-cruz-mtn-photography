@@ -18,7 +18,6 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             Santa Cruz Mountain Photography
           </a>
           <nav className="site-nav__links">
-            <a href="/">Home</a>
             <a href="/about/">About</a>
             <a href="/gallery/">Gallery</a>
             <a href="/blog/">Blog</a>
