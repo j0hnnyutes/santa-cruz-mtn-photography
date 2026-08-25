@@ -10,49 +10,6 @@
   --ink-contrast: #14181c;
 }
 
-/* Light theme variant — opt in with body class "theme-light". A/B staging
-   only right now (gallery-light page); not wired up anywhere production. */
-.theme-light {
-  color-scheme: light;
-  --ink: #1c1c1a;
-  --ink-dim: #6b665c;
-  --bg: #f7f5f0;
-  --ink-contrast: #f7f5f0;
-}
-
-.theme-light .site-nav {
-  background: linear-gradient(180deg, rgba(247, 245, 240, 0.88) 0%, rgba(247, 245, 240, 0) 100%);
-}
-
-.theme-light .tile {
-  background: #e9e6df;
-}
-
-.theme-light .divider {
-  background: rgba(28, 28, 26, 0.3);
-}
-
-.theme-light .cta,
-.theme-light .site-nav__cta {
-  border-color: rgba(28, 28, 26, 0.45);
-}
-
-.theme-light .footer {
-  color: rgba(28, 28, 26, 0.7);
-}
-
-.theme-light .footer a {
-  border-bottom-color: rgba(28, 28, 26, 0.3);
-}
-
-.theme-light .footer a:hover {
-  border-bottom-color: rgba(28, 28, 26, 0.75);
-}
-
-.theme-light .social {
-  color: rgba(28, 28, 26, 0.75);
-}
-
 * {
   box-sizing: border-box;
 }
