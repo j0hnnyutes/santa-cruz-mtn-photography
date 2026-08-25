@@ -1,0 +1,210 @@
+/* Blog — list + single post. Reuses base.css tokens/components. */
+
+.blog-intro {
+  padding: 6rem 6vw 1.5rem;
+  text-align: center;
+}
+
+.blog-intro .eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0;
+}
+
+.blog-empty {
+  text-align: center;
+  color: var(--ink-dim);
+  font-family: 'Jost', sans-serif;
+  padding: 2rem 6vw 6rem;
+}
+
+.blog-index {
+  min-height: 60vh;
+}
+
+.post-list {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 6vw 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.post-card {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-card-image {
+  border-radius: 3px;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+}
+
+.post-card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.post-card:hover .post-card-image img {
+  transform: scale(1.04);
+}
+
+.post-date {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 0.4rem;
+}
+
+.post-card-body h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  margin: 0 0 0.6rem;
+  transition: opacity 0.2s ease;
+}
+
+.post-card:hover .post-card-body h2 {
+  opacity: 0.8;
+}
+
+.post-excerpt {
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #d8d4cb;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .post-card {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Single post */
+
+.blog-post {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 6rem 6vw 4rem;
+}
+
+.blog-back {
+  display: inline-block;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+.blog-back:hover {
+  color: var(--ink);
+}
+
+.blog-post-header h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  margin: 0.3rem 0 0;
+  line-height: 1.15;
+}
+
+.blog-post-cover {
+  margin: 2.5rem 0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.blog-post-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.blog-post-content {
+  font-weight: 300;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #e4e0d6;
+}
+
+.blog-post-content h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 1.6rem;
+  margin: 2.4rem 0 1rem;
+  color: var(--ink);
+}
+
+.blog-post-content h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 2rem 0 0.8rem;
+  color: var(--ink);
+}
+
+.blog-post-content p {
+  margin: 0 0 1.4rem;
+}
+
+.blog-post-content a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 243, 238, 0.4);
+}
+
+.blog-post-content a:hover {
+  text-decoration-color: rgba(245, 243, 238, 0.9);
+}
+
+.blog-post-content ul,
+.blog-post-content ol {
+  margin: 0 0 1.4rem;
+  padding-left: 1.4rem;
+}
+
+.blog-post-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-content img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 3px;
+  margin: 2rem 0;
+}
+
+.blog-post-content blockquote {
+  margin: 1.8rem 0;
+  padding-left: 1.2rem;
+  border-left: 2px solid rgba(245, 243, 238, 0.3);
+  font-style: italic;
+  color: var(--ink-dim);
+}
+
+.blog-post-footer {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(245, 243, 238, 0.12);
+}

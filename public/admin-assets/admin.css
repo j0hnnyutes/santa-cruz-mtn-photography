@@ -284,3 +284,165 @@
   color: var(--ink-dim);
   margin: -1.6rem 0 2rem;
 }
+
+/* Blog admin */
+
+.post-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 800px;
+}
+
+.post-admin-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(245, 243, 238, 0.1);
+}
+
+.post-status {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.post-status.live {
+  color: #9fd6a8;
+  border: 1px solid rgba(159, 214, 168, 0.4);
+}
+
+.post-status.draft {
+  color: var(--ink-dim);
+  border: 1px solid rgba(245, 243, 238, 0.2);
+}
+
+.post-admin-title {
+  flex: 1;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.92rem;
+}
+
+.post-admin-title:hover {
+  text-decoration: underline;
+}
+
+.post-admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.post-admin-actions a {
+  color: var(--ink-dim);
+  text-decoration: none;
+}
+
+.post-admin-actions a:hover {
+  color: var(--ink);
+}
+
+/* Post editor */
+
+.post-editor {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.editor-field > span {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.editor-field input[type="text"],
+.editor-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: rgba(245, 243, 238, 0.06);
+  border: 1px solid rgba(245, 243, 238, 0.25);
+  border-radius: 2px;
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.92rem;
+  resize: vertical;
+}
+
+.editor-field input[type="text"]:focus,
+.editor-field textarea:focus {
+  outline: none;
+  border-color: rgba(245, 243, 238, 0.6);
+}
+
+.editor-content {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.editor-field input[type="file"] {
+  color: var(--ink-dim);
+  font-size: 0.82rem;
+}
+
+.editor-cover-preview {
+  display: block;
+  max-width: 320px;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.editor-seo {
+  border: 1px solid rgba(245, 243, 238, 0.15);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+}
+
+.editor-seo summary {
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+}
+
+.editor-seo .editor-field {
+  margin-top: 1rem;
+}
+
+.editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.editor-actions .admin-logout,
+.editor-actions .cta {
+  cursor: pointer;
+}
+
+.editor-actions .admin-logout:disabled,
+.editor-actions .cta:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

@@ -139,3 +139,35 @@ The Vercel Blob store (`santa-cruz-mtn-photography`) was created with
 auth. This is correct/intended for a public gallery, but means the URLs
 aren't a security boundary — don't rely on obscurity for anything that
 should actually be private.
+
+## Blog content is trusted, unsanitized HTML
+
+`app/blog/[slug]/page.tsx` renders post content via `marked` (Markdown →
+HTML) straight into `dangerouslySetInnerHTML`, with no sanitization pass.
+This is acceptable because post content only ever comes from the admin
+editor, behind the same auth as everything else in `/admin` — there's no
+path for a public visitor to inject content into a post. If this ever
+changes (e.g. a comments feature, or multi-user authoring with less-trusted
+accounts), add a sanitizer (e.g. `dompurify`) before that content reaches
+`dangerouslySetInnerHTML`.
+
+## Blog seed script vs. photo seed script — different safety models
+
+`scripts/publish-blog-posts.mjs` (the initial 7 posts) upserts by slug —
+safe to re-run, won't duplicate or wipe anything. This is a different,
+safer pattern than `scripts/ingest-jason-photos.mjs`, which deletes every
+existing Photo row before inserting (see the earlier note above). Don't
+assume the two scripts behave the same way.
+
+## Blog pages are the one place using real SSR
+
+Every other page on this site is either static HTML (`public/*.html`) or
+client-fetched-then-rendered (`/gallery`, via `fetch('/api/photos/')` in a
+`<script>` tag). `/blog` and `/blog/[slug]` are actual Next.js Server
+Components with `generateMetadata()` — the per-post title, description,
+OG tags, and JSON-LD are baked into the initial HTML response, not
+assembled client-side after JS runs. This was a deliberate choice specific
+to blog content (the primary SEO-driving page type), not a signal that the
+whole site should be migrated this way — the gallery's client-fetch
+approach was already a deliberate tradeoff for that page (see the git
+history around when `/gallery` was built), not an oversight.
