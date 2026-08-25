@@ -10,9 +10,16 @@ interface Photo {
   order: number;
 }
 
+interface PendingFile {
+  file: File;
+  previewUrl: string;
+  alt: string;
+}
+
 export default function AdminGalleryPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pending, setPending] = useState<PendingFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<{ text: string; error: boolean } | null>(null);
   const dragIndex = useRef<number | null>(null);
@@ -20,7 +27,7 @@ export default function AdminGalleryPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadPhotos = useCallback(async () => {
-    const res = await fetch("/api/admin/photos");
+    const res = await fetch("/api/admin/photos/");
     if (res.ok) {
       const data = await res.json();
       setPhotos(data.photos);
@@ -32,21 +39,44 @@ export default function AdminGalleryPage() {
     loadPhotos();
   }, [loadPhotos]);
 
-  async function handleFiles(files: FileList | null) {
+  function handleSelectFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
+    const next = Array.from(files).map((file) => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+      alt: "",
+    }));
+    setPending((prev) => [...prev, ...next]);
+    setUploadStatus(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  function updatePendingAlt(index: number, alt: string) {
+    setPending((prev) => prev.map((p, i) => (i === index ? { ...p, alt } : p)));
+  }
+
+  function removePending(index: number) {
+    setPending((prev) => {
+      URL.revokeObjectURL(prev[index].previewUrl);
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
+  async function handleUploadAll() {
     setUploading(true);
     setUploadStatus(null);
 
     let succeeded = 0;
     let failed = 0;
 
-    for (const file of Array.from(files)) {
+    for (const item of pending) {
       try {
-        const resized = await resizeImageFile(file);
+        const resized = await resizeImageFile(item.file);
         const form = new FormData();
-        form.append("file", resized, file.name.replace(/\.[^.]+$/, "") + ".jpg");
+        form.append("file", resized, item.file.name.replace(/\.[^.]+$/, "") + ".jpg");
+        form.append("alt", item.alt.trim());
 
-        const res = await fetch("/api/admin/photos", {
+        const res = await fetch("/api/admin/photos/", {
           method: "POST",
           headers: { "x-admin-csrf": getCsrfToken() },
           body: form,
@@ -57,10 +87,11 @@ export default function AdminGalleryPage() {
       } catch {
         failed += 1;
       }
+      URL.revokeObjectURL(item.previewUrl);
     }
 
     setUploading(false);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    setPending([]);
     setUploadStatus({
       text:
         failed === 0
@@ -73,7 +104,7 @@ export default function AdminGalleryPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this photo? This can't be undone.")) return;
-    const res = await fetch(`/api/admin/photos/${id}`, {
+    const res = await fetch(`/api/admin/photos/${id}/`, {
       method: "DELETE",
       headers: { "x-admin-csrf": getCsrfToken() },
     });
@@ -84,10 +115,19 @@ export default function AdminGalleryPage() {
 
   async function persistOrder(next: Photo[]) {
     setPhotos(next);
-    await fetch("/api/admin/photos/reorder", {
+    await fetch("/api/admin/photos/reorder/", {
       method: "PATCH",
       headers: { "Content-Type": "application/json", "x-admin-csrf": getCsrfToken() },
       body: JSON.stringify({ ids: next.map((p) => p.id) }),
+    });
+  }
+
+  async function updateAlt(id: string, alt: string) {
+    setPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, alt } : p)));
+    await fetch(`/api/admin/photos/${id}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", "x-admin-csrf": getCsrfToken() },
+      body: JSON.stringify({ alt }),
     });
   }
 
@@ -113,7 +153,7 @@ export default function AdminGalleryPage() {
   }
 
   async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" });
+    await fetch("/api/admin/logout/", { method: "POST" });
     window.location.href = "/admin";
   }
 
@@ -126,25 +166,56 @@ export default function AdminGalleryPage() {
         </button>
       </div>
 
-      <p className="admin-hint">Drag a photo to reorder. Order here is the order visitors see on the gallery page.</p>
+      <p className="admin-hint">
+        Drag a photo to reorder — that&rsquo;s the order visitors see. Captions become each
+        photo&rsquo;s alt text, which matters for accessibility and for showing up in Google
+        Image Search, so it&rsquo;s worth a real sentence, not just a label.
+      </p>
 
       <label className="upload-zone">
-        Drop photos here or choose files — resized automatically before upload.
+        Choose files — resized automatically before upload.
         <input
           ref={fileInputRef}
           type="file"
           accept="image/jpeg,image/png,image/webp"
           multiple
           disabled={uploading}
-          onChange={(e) => handleFiles(e.target.files)}
+          onChange={(e) => handleSelectFiles(e.target.files)}
         />
-        {uploading && <div className="upload-status">Uploading…</div>}
-        {uploadStatus && !uploading && (
+        {uploadStatus && (
           <div className={`upload-status ${uploadStatus.error ? "error" : "success"}`}>
             {uploadStatus.text}
           </div>
         )}
       </label>
+
+      {pending.length > 0 && (
+        <div className="pending-list">
+          {pending.map((item, index) => (
+            <div className="pending-item" key={item.previewUrl}>
+              <img src={item.previewUrl} alt="" />
+              <input
+                type="text"
+                placeholder="Describe this photo — e.g. “Sunset over the Santa Cruz Wharf”"
+                value={item.alt}
+                disabled={uploading}
+                onChange={(e) => updatePendingAlt(index, e.target.value)}
+              />
+              <button
+                type="button"
+                className="photo-delete"
+                disabled={uploading}
+                onClick={() => removePending(index)}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <button className="cta" onClick={handleUploadAll} disabled={uploading}>
+            {uploading ? "Uploading…" : `Upload ${pending.length} photo${pending.length === 1 ? "" : "s"}`}
+          </button>
+        </div>
+      )}
 
       {loading ? (
         <p className="admin-empty">Loading…</p>
@@ -163,6 +234,15 @@ export default function AdminGalleryPage() {
               onDragEnd={() => setDragOverIndex(null)}
             >
               <img src={photo.url} alt={photo.alt || ""} />
+              <input
+                type="text"
+                className="photo-alt-input"
+                placeholder="No caption — add one"
+                defaultValue={photo.alt}
+                onBlur={(e) => {
+                  if (e.target.value !== photo.alt) updateAlt(photo.id, e.target.value);
+                }}
+              />
               <div className="photo-meta">
                 <span className="photo-order">#{index + 1}</span>
                 <button className="photo-delete" onClick={() => handleDelete(photo.id)}>

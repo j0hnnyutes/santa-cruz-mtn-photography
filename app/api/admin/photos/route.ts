@@ -5,6 +5,18 @@ import { prisma } from "@/lib/prisma";
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024; // 15MB safety cap
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
+// Slugify the caption into the filename itself — "sea-lions-santa-cruz.jpg"
+// beats a bare UUID for image-search SEO, alongside the alt text.
+function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
+
 export async function GET() {
   const photos = await prisma.photo.findMany({ orderBy: { order: "asc" } });
   return NextResponse.json({ photos });
@@ -29,7 +41,9 @@ export async function POST(req: NextRequest) {
   }
 
   const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
-  const pathname = `gallery/${crypto.randomUUID()}.${ext}`;
+  const slug = slugify(alt);
+  const shortId = crypto.randomUUID().slice(0, 8);
+  const pathname = `gallery/${slug ? `${slug}-${shortId}` : shortId}.${ext}`;
 
   const blob = await put(pathname, file, {
     access: "public",

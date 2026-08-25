@@ -12,7 +12,7 @@ export default function AdminLoginClient({ next }: { next: string }) {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/login", {
+      const res = await fetch("/api/admin/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),

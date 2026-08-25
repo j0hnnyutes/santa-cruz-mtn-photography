@@ -138,10 +138,84 @@
   color: #9fd6a8;
 }
 
+.pending-list {
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pending-item {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.pending-item img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+}
+
+.pending-item input[type="text"] {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: rgba(245, 243, 238, 0.06);
+  border: 1px solid rgba(245, 243, 238, 0.25);
+  border-radius: 2px;
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.85rem;
+}
+
+.pending-item input[type="text"]:focus {
+  outline: none;
+  border-color: rgba(245, 243, 238, 0.6);
+}
+
+.pending-list > .cta {
+  align-self: flex-start;
+  margin-top: 0.6rem;
+  padding: 0.7rem 1.6rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  background: transparent;
+}
+
+.pending-list > .cta:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1rem;
+}
+
+.photo-alt-input {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  background: rgba(245, 243, 238, 0.05);
+  border: 0;
+  border-top: 1px solid rgba(245, 243, 238, 0.1);
+  color: var(--ink-dim);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+}
+
+.photo-alt-input:focus {
+  outline: none;
+  color: var(--ink);
+  background: rgba(245, 243, 238, 0.1);
+}
+
+.photo-alt-input::placeholder {
+  color: rgba(227, 137, 122, 0.75);
 }
 
 .photo-card {

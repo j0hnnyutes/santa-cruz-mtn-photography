@@ -1,5 +1,11 @@
 import { prisma } from "@/lib/prisma";
 
+// Without this, Next.js prerenders this route once at build time (it has no
+// per-request dynamic API calls, just a DB query) and freezes whatever
+// photos existed then — new uploads/deletes via /admin wouldn't show up
+// until the next deploy. force-dynamic keeps it querying the DB live.
+export const dynamic = "force-dynamic";
+
 const BASE_URL = "https://santacruzmtnphotography.com";
 
 function escapeXml(value: string): string {
