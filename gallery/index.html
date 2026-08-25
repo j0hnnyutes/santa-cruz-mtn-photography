@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Santa Cruz Mountain Photography</title>
+  <meta name="description" content="A gallery of Northern California landscapes from Santa Cruz Mountain Photography." />
+  <meta name="theme-color" content="#0a0e12" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css" />
+  <link rel="stylesheet" href="/gallery/gallery.css" />
+</head>
+<body class="inner-page">
+
+  <a class="site-brand" href="/">Santa Cruz Mountain Photography</a>
+
+  <header class="gallery-intro">
+    <p class="eyebrow">Gallery</p>
+    <p class="gallery-note">Placeholder shots of Northern California while the real portfolio is built out.</p>
+  </header>
+
+  <main class="mosaic" id="mosaic">
+    <button class="tile big" data-full="/images/gallery/golden-gate-bridge.jpg">
+      <img src="/images/gallery/golden-gate-bridge.jpg" alt="Golden Gate Bridge at blue hour, San Francisco" loading="eager" />
+    </button>
+    <button class="tile wide" data-full="/images/gallery/bixby-creek-bridge.jpg">
+      <img src="/images/gallery/bixby-creek-bridge.jpg" alt="Bixby Creek Bridge, Big Sur" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/mcway-falls.jpg">
+      <img src="/images/gallery/mcway-falls.jpg" alt="McWay Falls, Big Sur" loading="lazy" />
+    </button>
+    <button class="tile tall" data-full="/images/gallery/half-dome-yosemite.jpg">
+      <img src="/images/gallery/half-dome-yosemite.jpg" alt="Half Dome, Yosemite National Park" loading="lazy" />
+    </button>
+    <button class="tile wide" data-full="/images/gallery/el-capitan-yosemite.jpg">
+      <img src="/images/gallery/el-capitan-yosemite.jpg" alt="El Capitan, Yosemite Valley" loading="lazy" />
+    </button>
+    <button class="tile big" data-full="/images/gallery/emerald-bay-tahoe.jpg">
+      <img src="/images/gallery/emerald-bay-tahoe.jpg" alt="Emerald Bay, Lake Tahoe" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/point-reyes-lighthouse.jpg">
+      <img src="/images/gallery/point-reyes-lighthouse.jpg" alt="Point Reyes Lighthouse" loading="lazy" />
+    </button>
+    <button class="tile tall" data-full="/images/gallery/muir-woods.jpg">
+      <img src="/images/gallery/muir-woods.jpg" alt="Muir Woods National Monument" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/avenue-of-the-giants.jpg">
+      <img src="/images/gallery/avenue-of-the-giants.jpg" alt="Avenue of the Giants, Humboldt Redwoods" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/fern-canyon.jpg">
+      <img src="/images/gallery/fern-canyon.jpg" alt="Fern Canyon, Redwood National Park" loading="lazy" />
+    </button>
+    <button class="tile wide" data-full="/images/gallery/mendocino-coast.jpg">
+      <img src="/images/gallery/mendocino-coast.jpg" alt="Mendocino coastline at sunset" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/glass-beach.jpg">
+      <img src="/images/gallery/glass-beach.jpg" alt="Glass Beach, Fort Bragg" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/russian-river-vineyards.jpg">
+      <img src="/images/gallery/russian-river-vineyards.jpg" alt="Vineyards in the Russian River Valley, Sonoma" loading="lazy" />
+    </button>
+    <button class="tile wide" data-full="/images/gallery/napa-valley.jpg">
+      <img src="/images/gallery/napa-valley.jpg" alt="Napa Valley vineyards in autumn" loading="lazy" />
+    </button>
+    <button class="tile tall" data-full="/images/gallery/mount-shasta.jpg">
+      <img src="/images/gallery/mount-shasta.jpg" alt="Mount Shasta" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/lassen-volcanic-np.jpg">
+      <img src="/images/gallery/lassen-volcanic-np.jpg" alt="Kings Creek Meadow, Lassen Volcanic National Park" loading="lazy" />
+    </button>
+    <button class="tile big" data-full="/images/gallery/lone-cypress.jpg">
+      <img src="/images/gallery/lone-cypress.jpg" alt="The Lone Cypress, 17-Mile Drive" loading="lazy" />
+    </button>
+    <button class="tile" data-full="/images/gallery/carmel-highlands.jpg">
+      <img src="/images/gallery/carmel-highlands.jpg" alt="Sunset near Carmel Highlands" loading="lazy" />
+    </button>
+    <button class="tile wide" data-full="/images/gallery/santa-cruz-boardwalk.jpg">
+      <img src="/images/gallery/santa-cruz-boardwalk.jpg" alt="Santa Cruz Beach Boardwalk" loading="lazy" />
+    </button>
+    <button class="tile tall" data-full="/images/gallery/redwood-np-grove.jpg">
+      <img src="/images/gallery/redwood-np-grove.jpg" alt="Lady Bird Johnson Grove, Redwood National Park" loading="lazy" />
+    </button>
+  </main>
+
+  <footer class="footer">
+    <a href="/">&larr; Back home</a>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">&#8249;</button>
+    <img class="lb-img" id="lbImg" src="" alt="" />
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">&#8250;</button>
+  </div>
+
+  <script>
+    const tiles = Array.from(document.querySelectorAll('.tile'));
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    let currentIndex = -1;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      const tile = tiles[currentIndex];
+      lbImg.src = tile.dataset.full;
+      lbImg.alt = tile.querySelector('img').alt;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function showRelative(delta) {
+      currentIndex = (currentIndex + delta + tiles.length) % tiles.length;
+      const tile = tiles[currentIndex];
+      lbImg.src = tile.dataset.full;
+      lbImg.alt = tile.querySelector('img').alt;
+    }
+
+    tiles.forEach((tile, i) => {
+      tile.addEventListener('click', () => openLightbox(i));
+    });
+
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', () => showRelative(-1));
+    document.getElementById('lbNext').addEventListener('click', () => showRelative(1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showRelative(-1);
+      if (e.key === 'ArrowRight') showRelative(1);
+    });
+  </script>
+</body>
+</html>

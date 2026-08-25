@@ -3,14 +3,6 @@
    rules (footer, cta, social, site-brand) come from ../base.css and already
    default to this palette, so no page-level re-theming is needed here. */
 
-/* This page scrolls (unlike the single-viewport splash), so the footer
-   needs to sit in normal document flow rather than pinned to the viewport. */
-.about-page .footer {
-  position: static;
-  margin-top: 4rem;
-  padding: 2rem 4vw 2.5rem;
-}
-
 .about {
   padding: 4.5rem 6vw 6rem;
 }
