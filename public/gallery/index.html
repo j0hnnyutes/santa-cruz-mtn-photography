@@ -53,14 +53,38 @@
   </header>
 
   <header class="gallery-intro">
-    <h1 class="eyebrow">Photography Gallery</h1>
-    <p class="gallery-note">Santa Cruz and the Santa Cruz Mountains — coastlines, redwoods, live events, and more.</p>
+    <h1 class="eyebrow">Gallery</h1>
   </header>
 
   <main class="mosaic" id="mosaic" aria-live="polite"></main>
 
   <footer class="footer">
-    <a href="/">&larr; Back home</a>
+    <span class="social-group">
+      <a
+        class="social"
+        href="https://www.instagram.com/santacruzmtnphotography"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Santa Cruz Mountain Photography on Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line>
+        </svg>
+      </a>
+      <a
+        class="social"
+        href="https://www.facebook.com/share/1EiTQgBbLn/?mibextid=wwXIfr"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Santa Cruz Mountain Photography on Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M22 12.06C22 6.505 17.523 2 12 2S2 6.505 2 12.06c0 5.02 3.657 9.184 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.917 3.777-3.917 1.094 0 2.238.197 2.238.197v2.475h-1.26c-1.243 0-1.63.775-1.63 1.57v1.89h2.773l-.443 2.91h-2.33V22c4.78-.756 8.437-4.92 8.437-9.94Z"/>
+        </svg>
+      </a>
+    </span>
+    <span class="dot">&middot;</span>
+    <span>&copy; <span id="year"></span> Santa Cruz Mountain Photography</span>
   </footer>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -71,6 +95,8 @@
   </div>
 
   <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
     const mosaic = document.getElementById('mosaic');
     const lightbox = document.getElementById('lightbox');
     const lbImg = document.getElementById('lbImg');
@@ -111,41 +137,124 @@
       if (e.key === 'ArrowRight') showRelative(1);
     });
 
-    function render() {
-      mosaic.innerHTML = '';
-      photos.forEach((photo, i) => {
-        const tile = document.createElement('button');
-        tile.className = 'tile';
+    // Real justified-row layout: pack photos into rows so each row's
+    // items sum to exactly the container width, solving for that row's
+    // HEIGHT (not fixing it) so it fits. Row height varying is what gives
+    // visual rhythm even when every photo shares one aspect ratio (which
+    // Jason's initial batch does — same camera, same 3:2 crop): a
+    // fixed-row-height approach has nothing to vary in that case since
+    // every tile ends up the same width too. This still can't leave a
+    // gap — each row is solved to exactly fill the width by construction,
+    // same guarantee as before, just computed instead of left to flexbox.
+    const GAP = 8;
 
-        const img = document.createElement('img');
-        img.src = photo.url;
-        img.alt = photo.alt || '';
-        img.loading = i < 3 ? 'eager' : 'lazy';
+    function targetRowHeight(containerWidth) {
+      if (containerWidth < 700) return 220;
+      if (containerWidth < 1100) return 300;
+      return 380;
+    }
 
-        // Justified-row sizing: each tile's flex-grow becomes its image's
-        // own aspect ratio, so every row's tiles always sum to exactly 100%
-        // width (a guarantee of flexbox distribution) — this is what makes
-        // the "no blank spots, ever" property hold regardless of how many
-        // photos or what shapes they are.
-        function setGrow() {
-          if (img.naturalHeight > 0) {
-            tile.style.flexGrow = img.naturalWidth / img.naturalHeight;
-          }
+    function computeRows(items, containerWidth) {
+      const target = targetRowHeight(containerWidth);
+      const rows = [];
+      let row = [];
+      let ratioSum = 0;
+
+      items.forEach((item) => {
+        row.push(item);
+        ratioSum += item.ratio;
+        const widthAtTarget = ratioSum * target + (row.length - 1) * GAP;
+        if (widthAtTarget >= containerWidth) {
+          const availableWidth = containerWidth - (row.length - 1) * GAP;
+          const height = availableWidth / ratioSum;
+          // Cap how much a sparse last-in-a-run row can stretch beyond the
+          // target height, so a row of one or two wide photos doesn't
+          // blow up disproportionately tall.
+          rows.push({ items: row, height: Math.min(height, target * 1.6) });
+          row = [];
+          ratioSum = 0;
         }
-        if (img.complete) setGrow();
-        else img.addEventListener('load', setGrow);
+      });
+      if (row.length > 0) {
+        // Leftover partial row — don't force-stretch it to fill the width
+        // (that's the standard justified-gallery convention), just use
+        // the target height.
+        rows.push({ items: row, height: target });
+      }
+      return rows;
+    }
 
-        tile.appendChild(img);
-        tile.addEventListener('click', () => openLightbox(i));
-        mosaic.appendChild(tile);
+    function renderRows() {
+      const containerWidth = mosaic.clientWidth;
+      const rows = computeRows(photos, containerWidth);
+      mosaic.innerHTML = '';
+
+      let i = 0;
+      rows.forEach((row) => {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'mosaic-row';
+        rowEl.style.height = `${row.height}px`;
+
+        row.items.forEach((item) => {
+          const index = i++;
+          const tile = document.createElement('button');
+          tile.className = 'tile';
+          tile.style.width = `${item.ratio * row.height}px`;
+          tile.style.height = '100%';
+
+          const img = document.createElement('img');
+          img.src = item.url;
+          img.alt = item.alt || '';
+          img.loading = index < 6 ? 'eager' : 'lazy';
+
+          tile.appendChild(img);
+          tile.addEventListener('click', () => openLightbox(index));
+          rowEl.appendChild(tile);
+        });
+
+        mosaic.appendChild(rowEl);
       });
     }
 
+    // When a whole batch of photos shares one real aspect ratio (Jason's
+    // camera always shoots 3:2, so his first 22 photos all do), the row
+    // algorithm above still packs them mathematically correctly — it just
+    // has nothing to vary, since every row solves to the same composition.
+    // This nudges a repeating pattern of tiles toward a wider or narrower
+    // *display* ratio, cropped via object-fit: cover — the same technique
+    // real editorial mosaics use to mix "feature" and regular cells. It's
+    // a deliberate, stable pattern (not randomized per page load), so the
+    // layout doesn't jump around on refresh. Photos with genuinely varied
+    // real aspect ratios (future uploads) will naturally look varied
+    // without this — it's a fallback for a uniform batch, not a
+    // replacement for real variety.
+    const DISPLAY_RATIO_PATTERN = [1, 1, 1.65, 1, 0.7, 1, 1.3, 1, 1, 0.75, 1.5, 1];
+
+    function loadDimensions(photo, index) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const realRatio = img.naturalWidth / img.naturalHeight || 1.5;
+          const nudge = DISPLAY_RATIO_PATTERN[index % DISPLAY_RATIO_PATTERN.length];
+          resolve({ ...photo, ratio: realRatio * nudge });
+        };
+        img.onerror = () => resolve({ ...photo, ratio: 1.5 });
+        img.src = photo.url;
+      });
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderRows, 150);
+    });
+
     fetch('/api/photos/')
       .then((res) => res.json())
-      .then((data) => {
-        photos = data.photos || [];
-        render();
+      .then((data) => Promise.all((data.photos || []).map(loadDimensions)))
+      .then((withDimensions) => {
+        photos = withDimensions;
+        renderRows();
       })
       .catch(() => {
         mosaic.innerHTML = '<p class="admin-empty" style="padding: 2rem 6vw;">Couldn\'t load the gallery — try refreshing.</p>';

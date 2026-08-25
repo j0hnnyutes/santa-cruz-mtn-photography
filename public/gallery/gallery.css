@@ -1,11 +1,14 @@
-/* Gallery page — justified-row mosaic. Flexbox, not CSS Grid: each tile's
-   flex-grow is set (via the inline script) to its own image's aspect
-   ratio, so every row's items always sum to exactly 100% width — that's
-   a property of flexbox distribution, not something that can regress into
-   a gap the way CSS Grid's "dense" auto-placement can. Row height is
-   fixed; width varies per image's aspect ratio, giving the varied
-   "random" sizing without ever leaving a hole. Works automatically for
-   any future set of photos — no per-image span authoring needed. */
+/* Gallery page — real justified-row mosaic, computed in JS (see the
+   inline script): photos are packed into rows so each row's items sum to
+   exactly the container width, with the row's HEIGHT solved for per row
+   (not fixed) so it fits. That's what gives visual variety even when a
+   whole batch of photos shares one aspect ratio (which Jason's initial
+   22 photos do — same camera, same 3:2 landscape crop) — a fixed-height
+   flex-grow-only approach has nothing to vary in that case, since every
+   tile ends up the same width too. Varying row height solves both: more
+   items fit in a row at a shorter height, fewer/wider ones need a taller
+   row, and it still can't leave a gap because each row is solved to
+   exactly fill the width by construction. */
 
 .gallery-intro {
   padding: 6rem 6vw 1.5rem;
@@ -30,12 +33,16 @@
 
 .mosaic {
   display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
+  flex-direction: column;
   gap: 8px;
   padding: 1.5rem 8px 8px;
   max-width: 2200px;
   margin: 0 auto;
+}
+
+.mosaic-row {
+  display: flex;
+  gap: 8px;
 }
 
 .tile {
@@ -47,11 +54,7 @@
   background: #10151a;
   cursor: pointer;
   overflow: hidden;
-  height: 380px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
-  min-width: 220px;
+  flex: 0 0 auto;
 }
 
 .tile img {
@@ -74,21 +77,13 @@
   outline-offset: -2px;
 }
 
-@media (max-width: 1100px) {
-  .tile {
-    height: 300px;
-    min-width: 180px;
-  }
-}
-
 @media (max-width: 700px) {
   .mosaic {
     gap: 4px;
     padding: 1rem 4px 4px;
   }
-  .tile {
-    height: 220px;
-    min-width: 140px;
+  .mosaic-row {
+    gap: 4px;
   }
 }
 
