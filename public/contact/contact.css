@@ -55,6 +55,11 @@ body {
 }
 
 .direct-contact {
+  /* Temporarily hidden -- holding off on publishing Jason's phone number
+     until he decides whether to use it directly or route through a
+     separate forwarding number (spam-exposure question, 2026-08-26).
+     Markup is untouched; flip this back to visible to restore it. */
+  display: none;
   grid-area: blurb;
   text-align: center;
   padding: 1.5rem 2rem 2.8rem;
