@@ -169,6 +169,18 @@ body {
   margin: 0;
 }
 
+/* base.css centers .footer across the full page width, which on this
+   split layout straddles the photo/form seam and crowds the submit
+   button. Confine it to the photo column instead, where the gradient
+   overlay already guarantees contrast. */
+.footer {
+  left: 0;
+  right: auto;
+  width: 46%;
+  justify-content: flex-start;
+  padding-left: 2.5rem;
+}
+
 @media (max-width: 860px) {
   .split {
     flex-direction: column;
@@ -187,6 +199,8 @@ body {
 
   .footer {
     position: static;
+    width: auto;
+    justify-content: center;
     margin-top: 0;
     padding: 2rem 4vw 2.5rem;
   }
