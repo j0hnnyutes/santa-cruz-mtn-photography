@@ -147,10 +147,13 @@ a {
   padding: 2rem 4vw 2.5rem;
 }
 
-/* Site nav — fixed header bar, floats over page content (like a hero photo
-   or the top of a scrolling grid) rather than sitting in a solid bar.
-   STAGING: being designed on the gallery page first; once approved this
-   gets added to the splash and about pages too. */
+/* Site nav — fixed header bar, floats over whatever scrolls beneath it
+   (hero photo, gallery grid, blog copy). Frosted/near-opaque rather than a
+   gradient that fades to fully transparent at the bottom of the bar — a
+   fade-to-nothing background let scrolled text (e.g. a blog post's h1)
+   show through half-hidden right under the nav links, which read as
+   garbled overlapping text rather than a normal "scrolled past" state.
+   A solid backing fully occludes anything scrolling underneath instead. */
 .site-nav {
   position: fixed;
   top: 0;
@@ -162,7 +165,9 @@ a {
   justify-content: space-between;
   gap: 1.5rem;
   padding: 1.5rem 4vw;
-  background: linear-gradient(180deg, rgba(10, 14, 18, 0.7) 0%, rgba(10, 14, 18, 0) 100%);
+  background: rgba(10, 14, 18, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .site-nav__brand {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import sharp from "sharp";
 import { prisma } from "@/lib/prisma";
 
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024; // 15MB safety cap
@@ -45,9 +46,19 @@ export async function POST(req: NextRequest) {
   const shortId = crypto.randomUUID().slice(0, 8);
   const pathname = `gallery/${slug ? `${slug}-${shortId}` : shortId}.${ext}`;
 
-  const blob = await put(pathname, file, {
+  const bytes = Buffer.from(await file.arrayBuffer());
+
+  // Read intrinsic dimensions once, here, from the file header — so the
+  // public gallery never has to download a full photo client-side just to
+  // learn its aspect ratio (see the Photo model's width/height comment).
+  const metadata = await sharp(bytes).metadata();
+  const width = metadata.width ?? 0;
+  const height = metadata.height ?? 0;
+
+  const blob = await put(pathname, bytes, {
     access: "public",
     addRandomSuffix: false,
+    contentType: file.type,
   });
 
   const maxOrder = await prisma.photo.aggregate({ _max: { order: true } });
@@ -59,6 +70,8 @@ export async function POST(req: NextRequest) {
       pathname: blob.pathname,
       alt,
       order: nextOrder,
+      width,
+      height,
     },
   });
 

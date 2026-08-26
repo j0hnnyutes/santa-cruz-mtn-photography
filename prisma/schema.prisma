@@ -26,6 +26,14 @@ model Photo {
   pathname  String    // Vercel Blob pathname, needed to delete the blob later
   alt       String    @default("")
   order     Int       @default(0)
+  // Intrinsic pixel size, captured at upload time. Lets the public gallery
+  // compute its justified-row layout from known numbers instead of
+  // downloading every full-size photo up front just to read its
+  // dimensions — that preload-before-render was the gallery's main slow-load
+  // cause. 0 means "not known yet" (older rows from before this existed);
+  // the gallery falls back to measuring those individually.
+  width     Int       @default(0)
+  height    Int       @default(0)
   createdAt DateTime  @default(now())
 
   @@index([order])

@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   const photos = await prisma.photo.findMany({
     orderBy: { order: "asc" },
-    select: { id: true, url: true, alt: true },
+    select: { id: true, url: true, alt: true, width: true, height: true },
   });
 
   return NextResponse.json(
