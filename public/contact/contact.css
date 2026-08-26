@@ -16,9 +16,10 @@ body {
 
 .split-info {
   width: 46%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 6.5rem;
+  justify-content: center;
 }
 
 .split-photo {
@@ -226,6 +227,11 @@ body {
   .split-form {
     width: 100%;
     padding-top: 0;
+  }
+
+  .split-info {
+    min-height: 0;
+    justify-content: flex-start;
   }
 
   .split-photo {
