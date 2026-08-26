@@ -1,31 +1,43 @@
-/* Contact page — split screen: photo + direct-contact blurb left,
-   form right. Content-driven height now (not a single-viewport hero) —
-   the photo is deliberately short, with the "prefer to reach out
-   directly" blurb and footer sitting in normal flow beneath it, the
-   way britthoney.com/contact does it. */
+/* Contact page — grid, not flex, specifically so the photo/blurb/form
+   pieces can rearrange per breakpoint (photo+blurb stacked as a left
+   column on desktop; photo, then form, then blurb on mobile) without
+   reordering the DOM -- named grid-template-areas per breakpoint below
+   instead of a fragile flex `order` + mismatched-nesting combination. */
 
 body {
   overflow-x: hidden;
 }
 
 .split {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 46% 54%;
+  /* blurb's row is 1fr specifically so it (not photo's row) absorbs any
+     extra height the taller, row-spanning form column needs -- without
+     this, an auto/auto row pair both grow to share that extra space,
+     which pushes the blurb well below the photo instead of keeping it
+     close. Grid items stretch into their row by default, but plain
+     block content inside .direct-contact still sits at the top of that
+     taller box, so the visible text stays right under the photo either
+     way -- only the invisible leftover space moves. */
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "photo form"
+    "blurb form";
   min-height: 100vh;
-}
-
-.split-info {
-  width: 46%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .split-photo {
+  grid-area: photo;
   position: relative;
   height: 46vh;
   min-height: 320px;
+  /* Matches .split-form's own padding-top (8rem) plus the height of its
+     eyebrow line above the h1 -- lines the photo's top edge up with
+     "Let's talk about your project" exactly, at any viewport height.
+     (An earlier centering approach only happened to line up with the
+     h1 at one particular window size -- this is a fixed offset instead,
+     deliberately, verified to hold at multiple viewport heights.) */
+  margin-top: 10.1rem;
 }
 
 .split-photo img {
@@ -43,8 +55,9 @@ body {
 }
 
 .direct-contact {
+  grid-area: blurb;
   text-align: center;
-  padding: 2.8rem 2rem;
+  padding: 1.5rem 2rem 2.8rem;
 }
 
 .direct-contact-heading {
@@ -73,7 +86,7 @@ body {
 }
 
 .split-form {
-  width: 54%;
+  grid-area: form;
   display: flex;
   align-items: center;
   padding: 8rem 5vw 6rem;
@@ -220,25 +233,27 @@ body {
 
 @media (max-width: 860px) {
   .split {
-    flex-direction: column;
-  }
-
-  .split-info,
-  .split-form {
-    width: 100%;
-    padding-top: 0;
-  }
-
-  .split-info {
-    min-height: 0;
-    justify-content: flex-start;
+    grid-template-columns: 1fr;
+    /* Photo first, then straight into the form, blurb last -- having
+       "prefer to reach out directly" sit between the photo and the form
+       read oddly on a single narrow column, like a detour before the
+       actual point of the page. */
+    grid-template-areas:
+      "photo"
+      "form"
+      "blurb";
   }
 
   .split-photo {
     height: 34vh;
+    margin-top: 0;
   }
 
   .split-form {
-    padding: 3rem 6vw 5rem;
+    padding: 3rem 6vw 2rem;
+  }
+
+  .direct-contact {
+    padding-top: 0.5rem;
   }
 }
