@@ -18,6 +18,7 @@ body {
   width: 46%;
   display: flex;
   flex-direction: column;
+  padding-top: 6.5rem;
 }
 
 .split-photo {
@@ -212,18 +213,9 @@ body {
   margin: 0;
 }
 
-/* base.css makes .footer position:fixed by default (for the long-scroll
-   inner pages and the single-viewport splash). Here it sits naturally at
-   the bottom of the photo/blurb column instead, right after the direct-
-   contact block, so plain static flow is what we want. */
-.footer {
-  position: static;
-  width: auto;
-  justify-content: center;
-  margin-top: 0;
-  padding: 1.5rem 2rem 2.5rem;
-  border-top: 1px solid rgba(245, 243, 238, 0.12);
-}
+/* Footer uses the same shared .inner-page .footer pattern as about/
+   gallery/blog (static, centered, full width, below all content) --
+   see base.css. No page-specific override needed. */
 
 @media (max-width: 860px) {
   .split {
@@ -233,6 +225,7 @@ body {
   .split-info,
   .split-form {
     width: 100%;
+    padding-top: 0;
   }
 
   .split-photo {
