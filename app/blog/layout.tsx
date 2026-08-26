@@ -21,7 +21,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             <a href="/about/">About</a>
             <a href="/gallery/">Gallery</a>
             <a href="/blog/">Blog</a>
-            <a className="site-nav__cta" href="mailto:law138@santacruzmtnphotography.com">
+            <a className="site-nav__cta" href="/contact/">
               Contact
             </a>
           </nav>

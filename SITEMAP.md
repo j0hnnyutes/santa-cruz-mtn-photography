@@ -4,7 +4,7 @@ Living outline of the site's structure. Update this as pages get built or
 scope changes — treat it as the source of truth for what exists vs. what's
 still planned.
 
-Status legend: ✅ live on production · 📋 planned · ❓ needs a decision
+Status legend: ✅ live on production · 🚧 in progress on a branch · 📋 planned · ❓ needs a decision
 
 ## Pages
 
@@ -15,7 +15,8 @@ Status legend: ✅ live on production · 📋 planned · ❓ needs a decision
 /blog                 ✅ 7 posts live (3 local guides, 1 drone, 3 live music), DB-backed via
                           /admin, server-rendered per post for real SEO (unlike /gallery,
                           which is client-fetched)
-/contact              📋 still just a mailto link — revisit later (form vs. mailto)
+/contact              🚧 in progress on contact-page branch — real form (Resend email),
+                          replacing the mailto CTA links site-wide once live
 /prints               ❓ needs a decision — sell prints (Etsy/Shopify embed, or a real cart)?
 ```
 

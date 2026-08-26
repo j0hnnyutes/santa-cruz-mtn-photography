@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Santa Cruz Mountain Photography</title>
+  <meta name="description" content="Get in touch with Jason Lawton for print inquiries, event and drone bookings, or press and collaboration requests." />
+  <meta name="theme-color" content="#0a0e12" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Santa Cruz Mountain Photography" />
+  <meta property="og:url" content="https://santacruzmtnphotography.com/contact/" />
+  <meta property="og:title" content="Contact — Santa Cruz Mountain Photography" />
+  <meta property="og:description" content="Get in touch with Jason Lawton for print inquiries, event and drone bookings, or press and collaboration requests." />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Contact — Santa Cruz Mountain Photography" />
+  <meta name="twitter:description" content="Get in touch with Jason Lawton for print inquiries, event and drone bookings, or press and collaboration requests." />
+
+  <link rel="canonical" href="https://santacruzmtnphotography.com/contact/" />
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/base.css" />
+  <link rel="stylesheet" href="/contact/contact.css" />
+</head>
+<body>
+
+  <header class="site-nav">
+    <a class="site-nav__brand" href="/">Santa Cruz Mountain Photography</a>
+    <nav class="site-nav__links">
+      <a href="/about/">About</a>
+      <a href="/gallery/">Gallery</a>
+      <a href="/blog/">Blog</a>
+      <a class="site-nav__cta" href="/contact/">Contact</a>
+    </nav>
+  </header>
+
+  <div class="split">
+    <div class="split-photo">
+      <img src="/images/hero-poster.jpg" alt="Coastal cliffs along the Santa Cruz, California coastline at golden hour" />
+    </div>
+
+    <div class="split-form">
+      <div class="form-inner">
+        <p class="eyebrow">Get in touch</p>
+        <h1>Let's talk about your project</h1>
+        <p class="intro">Prints, bookings, drone work, or just a question — I read every message myself and usually reply within a couple of days.</p>
+
+        <form id="contactForm" novalidate>
+          <div class="hp-field" aria-hidden="true">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Jane Smith" required />
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="jane@email.com" required />
+          </div>
+
+          <div class="field">
+            <label for="subject">What's this about?</label>
+            <select id="subject" name="subject" required>
+              <option>General question</option>
+              <option>Print inquiry</option>
+              <option>Booking — event or drone work</option>
+              <option>Press / collaboration</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell me a bit about what you're looking for..." required></textarea>
+          </div>
+
+          <button class="cta submit-btn" type="submit">Send message</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="thanks" id="thanks" hidden>
+          <p class="thanks-title">Message sent.</p>
+          <p>Thanks for reaching out — I'll get back to you within a couple of days.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span class="social-group">
+      <a class="social" href="https://www.instagram.com/santacruzmtnphotography" target="_blank" rel="noopener noreferrer" aria-label="Santa Cruz Mountain Photography on Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line>
+        </svg>
+      </a>
+      <a class="social" href="https://www.facebook.com/share/1EiTQgBbLn/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Santa Cruz Mountain Photography on Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M22 12.06C22 6.505 17.523 2 12 2S2 6.505 2 12.06c0 5.02 3.657 9.184 8.438 9.94v-7.03H7.898v-2.91h2.54V9.845c0-2.522 1.492-3.917 3.777-3.917 1.094 0 2.238.197 2.238.197v2.475h-1.26c-1.243 0-1.63.775-1.63 1.57v1.89h2.773l-.443 2.91h-2.33V22c4.78-.756 8.437-4.92 8.437-9.94Z"/>
+        </svg>
+      </a>
+    </span>
+    <span class="dot">&middot;</span>
+    <span>&copy; <span id="year"></span> Santa Cruz Mountain Photography</span>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('contactForm');
+    const status = document.getElementById('formStatus');
+    const thanks = document.getElementById('thanks');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+      status.classList.remove('error');
+
+      const submitBtn = form.querySelector('.submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      const data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        subject: form.subject.value,
+        message: form.message.value.trim(),
+        company: form.company.value,
+      };
+
+      try {
+        const res = await fetch('/api/contact/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const result = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(result.error || 'Something went wrong. Please try again.');
+        }
+
+        form.hidden = true;
+        thanks.hidden = false;
+      } catch (err) {
+        status.textContent = err.message || 'Something went wrong. Please try again.';
+        status.classList.add('error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message';
+      }
+    });
+  </script>
+</body>
+</html>

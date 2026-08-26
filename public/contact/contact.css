@@ -1,0 +1,193 @@
+/* Contact page — split screen: full-bleed photo left, form right.
+   Single-viewport hero treatment like the splash page (fixed footer
+   overlaying the bottom of the frame), not the long-scroll .inner-page
+   pattern used by about/gallery/blog. */
+
+body {
+  overflow-x: hidden;
+}
+
+.split {
+  display: flex;
+  min-height: 100vh;
+}
+
+.split-photo {
+  width: 46%;
+  position: relative;
+}
+
+.split-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.split-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(10, 14, 18, 0.55) 0%, rgba(10, 14, 18, 0) 45%);
+}
+
+.split-form {
+  width: 54%;
+  display: flex;
+  align-items: center;
+  padding: 8rem 5vw 6rem;
+}
+
+.form-inner {
+  max-width: 460px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 1rem;
+}
+
+.form-inner h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  margin: 0 0 0.8rem;
+  line-height: 1.15;
+}
+
+.form-inner .intro {
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  line-height: 1.6;
+  margin: 0 0 2.2rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.3rem;
+}
+
+.field label {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: rgba(245, 243, 238, 0.05);
+  border: 1px solid rgba(245, 243, 238, 0.22);
+  border-radius: 2px;
+  padding: 0.75rem 0.9rem;
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.92rem;
+  width: 100%;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(245, 243, 238, 0.35);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: rgba(245, 243, 238, 0.55);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  text-align: center;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: 0.2em;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.form-status {
+  min-height: 1.2rem;
+  margin: 0.9rem 0 0;
+  font-size: 0.82rem;
+  color: var(--ink-dim);
+}
+
+.form-status.error {
+  color: #e0a37a;
+}
+
+/* Honeypot — visually and structurally hidden from real visitors and
+   screen readers, but still present in the DOM for bots that fill in
+   every field they can find. */
+.hp-field {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.thanks {
+  max-width: 460px;
+}
+
+.thanks-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 1.6rem;
+  margin: 0 0 0.6rem;
+}
+
+.thanks p:last-child {
+  font-size: 0.95rem;
+  color: var(--ink-dim);
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 860px) {
+  .split {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .split-photo {
+    width: 100%;
+    height: 38vh;
+  }
+
+  .split-form {
+    width: 100%;
+    padding: 3rem 6vw 5rem;
+  }
+
+  .footer {
+    position: static;
+    margin-top: 0;
+    padding: 2rem 4vw 2.5rem;
+  }
+}
