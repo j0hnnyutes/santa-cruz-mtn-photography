@@ -26,6 +26,35 @@ function isRateLimited(ip: string): boolean {
   return recent.length > RATE_LIMIT_MAX;
 }
 
+// Same fail-open approach as the tree-site project's lead form: a missing
+// or failed Turnstile check is logged, not blocked. A real inquiry should
+// never get lost because a CAPTCHA widget hiccuped or a visitor's browser
+// blocked the script — the honeypot + rate limit above still apply either
+// way, so this is a second layer, not the only one.
+async function verifyTurnstile(token: string): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) {
+    console.warn("TURNSTILE_SECRET_KEY not set — skipping verification");
+    return true;
+  }
+
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ secret, response: token }),
+    });
+    const data = await res.json();
+    if (!data.success) {
+      console.warn("Turnstile verification returned success=false", data["error-codes"]);
+    }
+    return Boolean(data.success);
+  } catch (err) {
+    console.error("Turnstile verification threw:", err);
+    return true; // fail open — don't drop a real inquiry over a network blip
+  }
+}
+
 export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   if (isRateLimited(ip)) {
@@ -42,6 +71,16 @@ export async function POST(req: NextRequest) {
   // it doesn't learn to look for a different tell.
   if (typeof body.company === "string" && body.company.trim() !== "") {
     return NextResponse.json({ ok: true });
+  }
+
+  const turnstileToken = typeof body.turnstileToken === "string" ? body.turnstileToken : "";
+  if (turnstileToken) {
+    const turnstileValid = await verifyTurnstile(turnstileToken);
+    if (!turnstileValid) {
+      console.warn("Turnstile verification failed — processing submission anyway.");
+    }
+  } else {
+    console.warn("No Turnstile token provided — processing submission without CAPTCHA.");
   }
 
   const name = typeof body.name === "string" ? body.name.trim() : "";

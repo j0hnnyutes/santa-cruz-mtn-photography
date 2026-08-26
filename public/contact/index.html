@@ -104,6 +104,15 @@
             <textarea id="message" name="message" placeholder="Tell me a bit about what you're looking for..." required></textarea>
           </div>
 
+          <div
+            class="cf-turnstile"
+            data-sitekey="0x4AAAAAAEcYFsOiL_0I2aaI"
+            data-size="compact"
+            data-callback="onTurnstileVerified"
+            data-expired-callback="onTurnstileExpired"
+            data-error-callback="onTurnstileExpired"
+          ></div>
+
           <button class="cta submit-btn" type="submit">Send message</button>
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
@@ -135,12 +144,26 @@
     <span>&copy; <span id="year"></span> Santa Cruz Mountain Photography</span>
   </footer>
 
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const form = document.getElementById('contactForm');
     const status = document.getElementById('formStatus');
     const thanks = document.getElementById('thanks');
+
+    // Managed-mode Turnstile: most visitors get a non-interactive check
+    // (no visible widget), only traffic Cloudflare flags as high-risk ever
+    // sees an actual challenge. Fails open on the server (see
+    // app/api/contact/route.ts) if this token never arrives -- a real
+    // inquiry should never get lost over a CAPTCHA hiccup.
+    let turnstileToken = '';
+    window.onTurnstileVerified = function (token) {
+      turnstileToken = token;
+    };
+    window.onTurnstileExpired = function () {
+      turnstileToken = '';
+    };
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -157,6 +180,7 @@
         subject: form.subject.value,
         message: form.message.value.trim(),
         company: form.company.value,
+        turnstileToken: turnstileToken,
       };
 
       try {
