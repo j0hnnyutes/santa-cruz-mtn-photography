@@ -105,7 +105,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <div className="blog-post-content" dangerouslySetInnerHTML={{ __html: html }} />
 
       <footer className="blog-post-footer">
-        <a className="cta" href="mailto:law138@santacruzmtnphotography.com">
+        <a className="cta" href="/contact/">
           Get in Touch
         </a>
       </footer>

@@ -86,6 +86,11 @@ export async function GET() {
     <loc>${BASE_URL}/blog/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${BASE_URL}/contact/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>${postEntries}
 </urlset>`;
 
