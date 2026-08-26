@@ -1,7 +1,8 @@
-/* Contact page — split screen: full-bleed photo left, form right.
-   Single-viewport hero treatment like the splash page (fixed footer
-   overlaying the bottom of the frame), not the long-scroll .inner-page
-   pattern used by about/gallery/blog. */
+/* Contact page — split screen: photo + direct-contact blurb left,
+   form right. Content-driven height now (not a single-viewport hero) —
+   the photo is deliberately short, with the "prefer to reach out
+   directly" blurb and footer sitting in normal flow beneath it, the
+   way britthoney.com/contact does it. */
 
 body {
   overflow-x: hidden;
@@ -9,12 +10,20 @@ body {
 
 .split {
   display: flex;
+  align-items: flex-start;
   min-height: 100vh;
 }
 
-.split-photo {
+.split-info {
   width: 46%;
+  display: flex;
+  flex-direction: column;
+}
+
+.split-photo {
   position: relative;
+  height: 46vh;
+  min-height: 320px;
 }
 
 .split-photo img {
@@ -28,7 +37,37 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, rgba(10, 14, 18, 0.55) 0%, rgba(10, 14, 18, 0) 45%);
+  background: linear-gradient(0deg, rgba(10, 14, 18, 0.4) 0%, rgba(10, 14, 18, 0) 45%);
+}
+
+.direct-contact {
+  text-align: center;
+  padding: 2.8rem 2rem;
+}
+
+.direct-contact-heading {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin: 0 0 0.7rem;
+}
+
+.direct-contact-info {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink-dim);
+  margin: 0;
+}
+
+.direct-contact-info a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 243, 238, 0.35);
+}
+
+.direct-contact-info a:hover {
+  border-bottom-color: rgba(245, 243, 238, 0.85);
 }
 
 .split-form {
@@ -173,39 +212,34 @@ body {
   margin: 0;
 }
 
-/* base.css centers .footer across the full page width, which on this
-   split layout straddles the photo/form seam and crowds the submit
-   button. Confine it to the photo column instead, where the gradient
-   overlay already guarantees contrast. */
+/* base.css makes .footer position:fixed by default (for the long-scroll
+   inner pages and the single-viewport splash). Here it sits naturally at
+   the bottom of the photo/blurb column instead, right after the direct-
+   contact block, so plain static flow is what we want. */
 .footer {
-  left: 0;
-  right: auto;
-  width: 46%;
-  justify-content: flex-start;
-  padding-left: 2.5rem;
+  position: static;
+  width: auto;
+  justify-content: center;
+  margin-top: 0;
+  padding: 1.5rem 2rem 2.5rem;
+  border-top: 1px solid rgba(245, 243, 238, 0.12);
 }
 
 @media (max-width: 860px) {
   .split {
     flex-direction: column;
-    min-height: 0;
+  }
+
+  .split-info,
+  .split-form {
+    width: 100%;
   }
 
   .split-photo {
-    width: 100%;
-    height: 38vh;
+    height: 34vh;
   }
 
   .split-form {
-    width: 100%;
     padding: 3rem 6vw 5rem;
-  }
-
-  .footer {
-    position: static;
-    width: auto;
-    justify-content: center;
-    margin-top: 0;
-    padding: 2rem 4vw 2.5rem;
   }
 }

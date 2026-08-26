@@ -4,12 +4,7 @@ import { sendContactNotification } from "@/lib/email";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_MESSAGE_LENGTH = 4000;
 
-const SUBJECT_OPTIONS = new Set([
-  "General question",
-  "Print inquiry",
-  "Booking — event or drone work",
-  "Press / collaboration",
-]);
+const SUBJECT_OPTIONS = new Set(["General question", "Event", "Drone work", "Print inquiry"]);
 
 // In-memory per-IP rate limit — resets on deploy/cold start, which is fine
 // for a low-traffic contact form. Same lightweight approach as the admin
