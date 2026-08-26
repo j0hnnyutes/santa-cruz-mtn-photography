@@ -110,7 +110,7 @@
 
 /* Single post — wide hero image, narrower readable text column. Full-width
    photo lets the page use the screen on a wide viewport; the text column
-   stays a deliberately readable ~70-character line length rather than
+   stays a deliberately readable ~80-character line length rather than
    stretching edge to edge, which would hurt readability more than the
    empty margins around a narrow page ever did. */
 
@@ -121,7 +121,7 @@
 .blog-post-header,
 .blog-post-content,
 .blog-post-footer {
-  max-width: 720px;
+  max-width: 860px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 6vw;
