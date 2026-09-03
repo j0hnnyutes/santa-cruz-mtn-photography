@@ -70,7 +70,10 @@
 
   <header class="site-nav">
     <a class="site-nav__brand" href="/">Santa Cruz Mountain Photography</a>
-    <nav class="site-nav__links">
+    <button class="site-nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNavLinks">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav__links" id="siteNavLinks">
       <a href="/about/">About</a>
       <a href="/gallery/">Gallery</a>
       <a href="/blog/">Blog</a>
@@ -117,5 +120,6 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
+  <script src="/nav.js" defer></script>
 </body>
 </html>

@@ -17,7 +17,12 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           <a className="site-nav__brand" href="/">
             Santa Cruz Mountain Photography
           </a>
-          <nav className="site-nav__links">
+          <button className="site-nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNavLinks">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <nav className="site-nav__links" id="siteNavLinks">
             <a href="/about/">About</a>
             <a href="/gallery/">Gallery</a>
             <a href="/blog/">Blog</a>
@@ -70,6 +75,8 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           </span>
         </footer>
       </div>
+
+      <script src="/nav.js" defer></script>
     </>
   );
 }

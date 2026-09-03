@@ -221,27 +221,92 @@ a {
   color: var(--ink-contrast);
 }
 
-@media (max-width: 640px) {
+/* Hamburger toggle — hidden and inert on desktop (display:none removes it
+   from the flex row entirely, so .site-nav's space-between still applies
+   cleanly to just brand + links). Below the breakpoint it swaps places
+   with the links: the links leave the flex row (position:absolute) and
+   become a dropdown panel instead, so the toggle is what fills that slot. */
+.site-nav__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.site-nav__toggle span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--ink);
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.site-nav.nav-open .site-nav__toggle span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.site-nav.nav-open .site-nav__toggle span:nth-child(2) {
+  opacity: 0;
+}
+
+.site-nav.nav-open .site-nav__toggle span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+@media (max-width: 700px) {
   .site-nav {
     padding: 1.1rem 5vw;
-    gap: 0.8rem;
   }
+
   .site-nav__brand {
     font-size: 0.85rem;
   }
-  .site-nav__links {
-    gap: 1.1rem;
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-  }
-  .site-nav__cta {
-    padding: 0.4rem 0.75rem;
-  }
-}
 
-@media (max-width: 420px) {
-  .site-nav__links a:not(.site-nav__cta) {
-    display: none;
+  .site-nav__toggle {
+    display: flex;
+  }
+
+  /* Dropdown panel — not "position: fixed" here, .site-nav (its
+     positioned ancestor) already is, so this just needs to hang off the
+     bottom of the bar. max-height (not display) is what's animated, so
+     the open/close has a transition instead of an instant snap. */
+  .site-nav__links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(10, 14, 18, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: max-height 0.3s ease;
+  }
+
+  .site-nav.nav-open .site-nav__links {
+    max-height: 320px;
+  }
+
+  .site-nav__links a {
+    padding: 1.1rem 6vw;
+    border-top: 1px solid rgba(245, 243, 238, 0.1);
+    font-size: 0.78rem;
+  }
+
+  .site-nav__cta {
+    border: none !important;
+    text-align: left;
   }
 }
 
