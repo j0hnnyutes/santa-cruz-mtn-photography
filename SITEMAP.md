@@ -15,8 +15,8 @@ Status legend: ✅ live on production · 🚧 in progress on a branch · 📋 pl
 /blog                 ✅ 7 posts live (3 local guides, 1 drone, 3 live music), DB-backed via
                           /admin, server-rendered per post for real SEO (unlike /gallery,
                           which is client-fetched)
-/contact              🚧 in progress on contact-page branch — real form (Resend email),
-                          replacing the mailto CTA links site-wide once live
+/contact              ✅ real form (Resend email, Turnstile spam protection), replaced the
+                          mailto CTA links site-wide
 /prints               ❓ needs a decision — sell prints (Etsy/Shopify embed, or a real cart)?
 ```
 
@@ -75,5 +75,7 @@ it's actually targeting.
 - [ ] Sell prints, or portfolio-only for now?
 - [ ] More blog posts — the initial 7 are a starting batch, not a finished library. Worth
       revisiting whether Jason will actually keep posting before investing more here.
-- [ ] Contact form, or keep the mailto link?
-- [ ] Favicon design
+- [ ] Favicon design — 10 logo concepts already sketched and reviewed, none picked yet
+- [ ] Jason's phone number on /contact — the "prefer to reach out directly" blurb is built
+      but hidden (display:none in contact.css) pending his decision: his real cell, or a
+      forwarding number (e.g. Google Voice) to limit spam exposure
