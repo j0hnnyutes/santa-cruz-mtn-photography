@@ -206,7 +206,11 @@
           tile.style.height = '100%';
 
           const img = document.createElement('img');
-          img.src = item.url;
+          // Grid tiles render at well under 1200px wide even on the widest
+          // row -- the thumbnail (max 1200px, WebP) instead of the full-res
+          // original. Older rows uploaded before thumbnails existed fall
+          // back to the original.
+          img.src = item.thumbnailUrl || item.url;
           img.alt = item.alt || '';
           img.loading = index < 6 ? 'eager' : 'lazy';
 

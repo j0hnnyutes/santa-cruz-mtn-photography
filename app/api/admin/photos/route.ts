@@ -6,6 +6,13 @@ import { prisma } from "@/lib/prisma";
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024; // 15MB safety cap
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
+// Widest a gallery tile actually renders at (see gallery/index.html's
+// targetRowHeight: 380px max row height, times the widest display-ratio
+// nudge, ~1.65) -- 1200px covers that comfortably even at 2x pixel
+// density, without shipping 2000px of resolution nobody's screen shows.
+const THUMBNAIL_MAX_DIMENSION = 1200;
+const THUMBNAIL_QUALITY = 78;
+
 // Slugify the caption into the filename itself — "sea-lions-santa-cruz.jpg"
 // beats a bare UUID for image-search SEO, alongside the alt text.
 function slugify(input: string): string {
@@ -61,6 +68,25 @@ export async function POST(req: NextRequest) {
     contentType: file.type,
   });
 
+  // Grid-sized WebP derivative -- generated once here rather than left to
+  // an on-the-fly image service, since this project has no CDN image
+  // transform in front of Blob storage. Skip upscaling tiny sources.
+  const thumbnailPathname = pathname.replace(/\.\w+$/, "-thumb.webp");
+  const thumbnailBuffer = await sharp(bytes)
+    .resize({
+      width: THUMBNAIL_MAX_DIMENSION,
+      height: THUMBNAIL_MAX_DIMENSION,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+    .webp({ quality: THUMBNAIL_QUALITY })
+    .toBuffer();
+  const thumbnailBlob = await put(thumbnailPathname, thumbnailBuffer, {
+    access: "public",
+    addRandomSuffix: false,
+    contentType: "image/webp",
+  });
+
   const maxOrder = await prisma.photo.aggregate({ _max: { order: true } });
   const nextOrder = (maxOrder._max.order ?? -1) + 1;
 
@@ -72,6 +98,8 @@ export async function POST(req: NextRequest) {
       order: nextOrder,
       width,
       height,
+      thumbnailUrl: thumbnailBlob.url,
+      thumbnailPathname: thumbnailBlob.pathname,
     },
   });
 

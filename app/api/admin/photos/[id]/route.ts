@@ -13,6 +13,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   await del(photo.pathname).catch(() => {
     // If the blob is already gone, don't block deleting the DB row over it.
   });
+  if (photo.thumbnailPathname) {
+    await del(photo.thumbnailPathname).catch(() => {});
+  }
   await prisma.photo.delete({ where: { id } });
 
   return NextResponse.json({ ok: true });

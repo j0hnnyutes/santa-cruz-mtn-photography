@@ -34,6 +34,15 @@ model Photo {
   // the gallery falls back to measuring those individually.
   width     Int       @default(0)
   height    Int       @default(0)
+  // Grid-sized WebP derivative (max 1200px, generated at upload time) --
+  // the public gallery renders tiles from this instead of the full-res
+  // original, which was being served at up to 600KB per photo regardless
+  // of the ~380px-tall tile it was actually displayed in. `url` above
+  // stays the full-res original, used by the lightbox and the sitemap.
+  // Empty string means "not generated yet" (rows from before this
+  // existed) -- the gallery falls back to `url` for those.
+  thumbnailUrl      String @default("")
+  thumbnailPathname String @default("")
   createdAt DateTime  @default(now())
 
   @@index([order])
