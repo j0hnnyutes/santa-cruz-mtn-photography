@@ -15,6 +15,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
       <div className="inner-page">
         <header className="site-nav">
           <a className="site-nav__brand" href="/">
+            <img className="site-nav__brand-icon" src="/images/logo-icon-white.svg" alt="" />
             Santa Cruz Mountain Photography
           </a>
           <button className="site-nav__toggle" aria-label="Menu" aria-expanded="false" aria-controls="siteNavLinks">
