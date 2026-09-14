@@ -117,16 +117,20 @@
   border: 1px dashed rgba(245, 243, 238, 0.35);
   border-radius: 4px;
   padding: 1.25rem;
-  text-align: center;
+  text-align: left;
   margin-bottom: 2.5rem;
   font-family: 'Jost', sans-serif;
-  font-size: 0.88rem;
+  /* Matches .admin-hint's size -- was 0.88rem, a size only this label
+     used, which combined with being centered (everything else on the
+     page is left-aligned) read as a different typeface even though the
+     font-family was always the same. */
+  font-size: 0.78rem;
   color: var(--ink-dim);
 }
 
 .upload-zone input[type="file"] {
   display: block;
-  margin: 0 auto 0.8rem;
+  margin: 0.7rem 0 0.8rem;
   color: var(--ink-dim);
   font-size: 0.82rem;
 }
