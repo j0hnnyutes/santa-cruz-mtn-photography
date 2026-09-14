@@ -43,6 +43,10 @@ model Photo {
   // existed) -- the gallery falls back to `url` for those.
   thumbnailUrl      String @default("")
   thumbnailPathname String @default("")
+  // One of PHOTO_CATEGORIES (lib/photoCategories.ts): "Landscape" | "Events" |
+  // "Aerial". "" means not yet assigned -- rows created before this field
+  // existed, until the admin sets one via the per-photo dropdown.
+  category  String    @default("")
   createdAt DateTime  @default(now())
 
   @@index([order])

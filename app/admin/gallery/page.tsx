@@ -2,18 +2,21 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getCsrfToken, resizeImageFile } from "@/lib/adminClient";
+import { PHOTO_CATEGORIES } from "@/lib/photoCategories";
 
 interface Photo {
   id: string;
   url: string;
   alt: string;
   order: number;
+  category: string;
 }
 
 interface PendingFile {
   file: File;
   previewUrl: string;
   alt: string;
+  category: string;
 }
 
 export default function AdminGalleryPage() {
@@ -45,6 +48,7 @@ export default function AdminGalleryPage() {
       file,
       previewUrl: URL.createObjectURL(file),
       alt: "",
+      category: "",
     }));
     setPending((prev) => [...prev, ...next]);
     setUploadStatus(null);
@@ -53,6 +57,10 @@ export default function AdminGalleryPage() {
 
   function updatePendingAlt(index: number, alt: string) {
     setPending((prev) => prev.map((p, i) => (i === index ? { ...p, alt } : p)));
+  }
+
+  function updatePendingCategory(index: number, category: string) {
+    setPending((prev) => prev.map((p, i) => (i === index ? { ...p, category } : p)));
   }
 
   function removePending(index: number) {
@@ -75,6 +83,7 @@ export default function AdminGalleryPage() {
         const form = new FormData();
         form.append("file", resized, item.file.name.replace(/\.[^.]+$/, "") + ".jpg");
         form.append("alt", item.alt.trim());
+        form.append("category", item.category);
 
         const res = await fetch("/api/admin/photos/", {
           method: "POST",
@@ -128,6 +137,15 @@ export default function AdminGalleryPage() {
       method: "PATCH",
       headers: { "Content-Type": "application/json", "x-admin-csrf": getCsrfToken() },
       body: JSON.stringify({ alt }),
+    });
+  }
+
+  async function updateCategory(id: string, category: string) {
+    setPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, category } : p)));
+    await fetch(`/api/admin/photos/${id}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", "x-admin-csrf": getCsrfToken() },
+      body: JSON.stringify({ category }),
     });
   }
 
@@ -201,6 +219,21 @@ export default function AdminGalleryPage() {
                 disabled={uploading}
                 onChange={(e) => updatePendingAlt(index, e.target.value)}
               />
+              <select
+                className="pending-cat"
+                value={item.category}
+                disabled={uploading}
+                onChange={(e) => updatePendingCategory(index, e.target.value)}
+              >
+                <option value="" disabled hidden>
+                  Choose section
+                </option>
+                {PHOTO_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
               <button
                 type="button"
                 className="photo-delete"
@@ -211,9 +244,18 @@ export default function AdminGalleryPage() {
               </button>
             </div>
           ))}
-          <button className="cta" onClick={handleUploadAll} disabled={uploading}>
+          <button
+            className="cta"
+            onClick={handleUploadAll}
+            disabled={uploading || pending.some((p) => !p.category)}
+          >
             {uploading ? "Uploading…" : `Upload ${pending.length} photo${pending.length === 1 ? "" : "s"}`}
           </button>
+          {pending.some((p) => !p.category) && (
+            <p className="admin-hint" style={{ marginTop: "-0.2rem" }}>
+              Choose a section for every photo before uploading.
+            </p>
+          )}
         </div>
       )}
 
@@ -243,6 +285,20 @@ export default function AdminGalleryPage() {
                   if (e.target.value !== photo.alt) updateAlt(photo.id, e.target.value);
                 }}
               />
+              <select
+                className="cat-select"
+                value={photo.category}
+                onChange={(e) => updateCategory(photo.id, e.target.value)}
+              >
+                <option value="" disabled hidden>
+                  Uncategorized
+                </option>
+                {PHOTO_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
               <div className="photo-meta">
                 <span className="photo-order">#{index + 1}</span>
                 <button className="photo-delete" onClick={() => handleDelete(photo.id)}>

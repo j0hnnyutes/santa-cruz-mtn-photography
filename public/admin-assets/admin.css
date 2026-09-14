@@ -147,7 +147,7 @@
 
 .pending-item {
   display: grid;
-  grid-template-columns: 56px 1fr auto;
+  grid-template-columns: 56px 1fr 140px auto;
   align-items: center;
   gap: 0.8rem;
 }
@@ -172,6 +172,23 @@
 }
 
 .pending-item input[type="text"]:focus {
+  outline: none;
+  border-color: rgba(245, 243, 238, 0.6);
+}
+
+.pending-cat {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  background: rgba(245, 243, 238, 0.06);
+  border: 1px solid rgba(245, 243, 238, 0.25);
+  border-radius: 2px;
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.pending-cat:focus {
   outline: none;
   border-color: rgba(245, 243, 238, 0.6);
 }
@@ -216,6 +233,27 @@
 
 .photo-alt-input::placeholder {
   color: rgba(227, 137, 122, 0.75);
+}
+
+.cat-select {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  background: rgba(245, 243, 238, 0.05);
+  border: 0;
+  border-top: 1px solid rgba(245, 243, 238, 0.1);
+  color: var(--ink-dim);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.cat-select:focus {
+  outline: none;
+  color: var(--ink);
+  background: rgba(245, 243, 238, 0.1);
 }
 
 .photo-card {

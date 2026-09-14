@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { del } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
+import { isPhotoCategory } from "@/lib/photoCategories";
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -25,14 +26,21 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { id } = await params;
   const body = await req.json().catch(() => null);
 
-  if (!body || typeof body.alt !== "string") {
+  // Either field may show up on its own (alt blurs, category dropdown
+  // changes) or together -- accept whichever valid ones are present.
+  const data: { alt?: string; category?: string } = {};
+  if (body && typeof body.alt === "string") {
+    data.alt = body.alt.trim();
+  }
+  if (body && isPhotoCategory(body.category)) {
+    data.category = body.category;
+  }
+
+  if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const photo = await prisma.photo.update({
-    where: { id },
-    data: { alt: body.alt.trim() },
-  });
+  const photo = await prisma.photo.update({ where: { id }, data });
 
   return NextResponse.json({ photo });
 }

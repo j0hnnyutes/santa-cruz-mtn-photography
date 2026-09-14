@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import sharp from "sharp";
 import { prisma } from "@/lib/prisma";
+import { isPhotoCategory } from "@/lib/photoCategories";
 
 const MAX_UPLOAD_BYTES = 15 * 1024 * 1024; // 15MB safety cap
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
@@ -34,6 +35,8 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const file = form.get("file");
   const alt = (form.get("alt") as string | null)?.trim() ?? "";
+  const categoryInput = form.get("category") as string | null;
+  const category = isPhotoCategory(categoryInput) ? categoryInput : "";
 
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -100,6 +103,7 @@ export async function POST(req: NextRequest) {
       height,
       thumbnailUrl: thumbnailBlob.url,
       thumbnailPathname: thumbnailBlob.pathname,
+      category,
     },
   });
 
