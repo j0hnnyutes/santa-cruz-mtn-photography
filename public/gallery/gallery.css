@@ -10,6 +10,10 @@
    row, and it still can't leave a gap because each row is solved to
    exactly fill the width by construction. */
 
+html {
+  scroll-behavior: smooth;
+}
+
 .gallery-intro {
   padding: 6rem 6vw 1.5rem;
   text-align: center;
@@ -29,6 +33,65 @@
   font-size: 0.85rem;
   color: var(--ink-dim);
   margin: 0;
+}
+
+.category-jumpnav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0 6vw 2rem;
+}
+
+.category-jumpnav a {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border: 1px solid rgba(245, 243, 238, 0.2);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.category-jumpnav a:hover,
+.category-jumpnav a:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.category-section {
+  scroll-margin-top: 1.2rem;
+}
+
+.category-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 3rem 6vw 0.4rem;
+  text-align: center;
+}
+
+.category-section:first-of-type .category-head {
+  padding-top: 0.5rem;
+}
+
+.category-head h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 1.9rem;
+  margin: 0;
+}
+
+.category-count {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
 }
 
 .mosaic {
