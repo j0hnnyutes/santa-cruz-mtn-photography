@@ -25,8 +25,11 @@ export default function AdminGalleryPage() {
   const [pending, setPending] = useState<PendingFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<{ text: string; error: boolean } | null>(null);
-  const dragIndex = useRef<number | null>(null);
-  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  // Drag-to-reorder is scoped to one category's own grid now that photos
+  // are grouped -- tracking by id (not a flat index) makes it trivial to
+  // refuse a drop that crosses into a different section's grid.
+  const dragId = useRef<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadPhotos = useCallback(async () => {
@@ -149,24 +152,40 @@ export default function AdminGalleryPage() {
     });
   }
 
-  function onDragStart(index: number) {
-    dragIndex.current = index;
+  function onDragStart(id: string) {
+    dragId.current = id;
   }
 
-  function onDragOver(e: React.DragEvent, index: number) {
+  function onDragOver(e: React.DragEvent, id: string) {
     e.preventDefault();
-    setDragOverIndex(index);
+    setDragOverId(id);
   }
 
-  function onDrop(index: number) {
-    const from = dragIndex.current;
-    dragIndex.current = null;
-    setDragOverIndex(null);
-    if (from === null || from === index) return;
+  // Reordering is scoped to one category's own grid -- a drop is ignored
+  // if the dragged photo isn't in the same category as the drop target,
+  // rather than letting a drag silently reassign its section.
+  function onDrop(category: string, targetId: string) {
+    const fromId = dragId.current;
+    dragId.current = null;
+    setDragOverId(null);
+    if (!fromId || fromId === targetId) return;
 
-    const next = [...photos];
-    const [moved] = next.splice(from, 1);
-    next.splice(index, 0, moved);
+    const fromPhoto = photos.find((p) => p.id === fromId);
+    if (!fromPhoto || fromPhoto.category !== category) return;
+
+    const categoryItems = photos.filter((p) => p.category === category);
+    const fromIdx = categoryItems.findIndex((p) => p.id === fromId);
+    const toIdx = categoryItems.findIndex((p) => p.id === targetId);
+    if (fromIdx === -1 || toIdx === -1) return;
+
+    const reordered = [...categoryItems];
+    const [moved] = reordered.splice(fromIdx, 1);
+    reordered.splice(toIdx, 0, moved);
+
+    // Splice the reordered category back into the full list, leaving every
+    // other category's photos exactly where they were.
+    let i = 0;
+    const next = photos.map((p) => (p.category === category ? reordered[i++] : p));
     persistOrder(next);
   }
 
@@ -264,50 +283,124 @@ export default function AdminGalleryPage() {
       ) : photos.length === 0 ? (
         <p className="admin-empty">No photos yet — upload the first one above.</p>
       ) : (
-        <div className="photo-grid">
-          {photos.map((photo, index) => (
-            <div
-              key={photo.id}
-              className={`photo-card${dragOverIndex === index ? " drag-over" : ""}`}
-              draggable
-              onDragStart={() => onDragStart(index)}
-              onDragOver={(e) => onDragOver(e, index)}
-              onDrop={() => onDrop(index)}
-              onDragEnd={() => setDragOverIndex(null)}
-            >
-              <img src={photo.url} alt={photo.alt || ""} />
-              <input
-                type="text"
-                className="photo-alt-input"
-                placeholder="No caption — add one"
-                defaultValue={photo.alt}
-                onBlur={(e) => {
-                  if (e.target.value !== photo.alt) updateAlt(photo.id, e.target.value);
-                }}
-              />
-              <select
-                className="cat-select"
-                value={photo.category}
-                onChange={(e) => updateCategory(photo.id, e.target.value)}
-              >
-                <option value="" disabled hidden>
-                  Uncategorized
-                </option>
-                {PHOTO_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-              <div className="photo-meta">
-                <span className="photo-order">#{index + 1}</span>
-                <button className="photo-delete" onClick={() => handleDelete(photo.id)}>
-                  Delete
-                </button>
+        <>
+          {PHOTO_CATEGORIES.map((category) => {
+            const items = photos.filter((p) => p.category === category);
+            return (
+              <section className="admin-category" key={category}>
+                <div className="admin-category-head">
+                  <h2>{category}</h2>
+                  <span className="admin-category-count">
+                    {items.length} photo{items.length === 1 ? "" : "s"}
+                  </span>
+                </div>
+                {items.length === 0 ? (
+                  <p className="admin-category-empty">No photos in this section yet.</p>
+                ) : (
+                  <div className="photo-grid">
+                    {items.map((photo, index) => (
+                      <div
+                        key={photo.id}
+                        className={`photo-card${dragOverId === photo.id ? " drag-over" : ""}`}
+                        draggable
+                        onDragStart={() => onDragStart(photo.id)}
+                        onDragOver={(e) => onDragOver(e, photo.id)}
+                        onDrop={() => onDrop(category, photo.id)}
+                        onDragEnd={() => setDragOverId(null)}
+                      >
+                        <img src={photo.url} alt={photo.alt || ""} />
+                        <input
+                          type="text"
+                          className="photo-alt-input"
+                          placeholder="No caption — add one"
+                          defaultValue={photo.alt}
+                          onBlur={(e) => {
+                            if (e.target.value !== photo.alt) updateAlt(photo.id, e.target.value);
+                          }}
+                        />
+                        <select
+                          className="cat-select"
+                          value={photo.category}
+                          onChange={(e) => updateCategory(photo.id, e.target.value)}
+                        >
+                          <option value="" disabled hidden>
+                            Uncategorized
+                          </option>
+                          {PHOTO_CATEGORIES.map((cat) => (
+                            <option key={cat} value={cat}>
+                              {cat}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="photo-meta">
+                          <span className="photo-order">#{index + 1}</span>
+                          <button className="photo-delete" onClick={() => handleDelete(photo.id)}>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            );
+          })}
+
+          {/* Rows saved before category existed, or somehow cleared back to
+              "" -- the dropdown itself can never produce this, so this only
+              shows up for legacy/edge-case data. Surfaced here rather than
+              hidden, unlike the public gallery, so nothing goes missing from
+              Jason's own view of his photos. */}
+          {photos.some((p) => !p.category) && (
+            <section className="admin-category">
+              <div className="admin-category-head">
+                <h2>Uncategorized</h2>
+                <span className="admin-category-count">
+                  {photos.filter((p) => !p.category).length} photo
+                  {photos.filter((p) => !p.category).length === 1 ? "" : "s"}
+                </span>
               </div>
-            </div>
-          ))}
-        </div>
+              <div className="photo-grid">
+                {photos
+                  .filter((p) => !p.category)
+                  .map((photo, index) => (
+                    <div className="photo-card" key={photo.id}>
+                      <img src={photo.url} alt={photo.alt || ""} />
+                      <input
+                        type="text"
+                        className="photo-alt-input"
+                        placeholder="No caption — add one"
+                        defaultValue={photo.alt}
+                        onBlur={(e) => {
+                          if (e.target.value !== photo.alt) updateAlt(photo.id, e.target.value);
+                        }}
+                      />
+                      <select
+                        className="cat-select"
+                        value={photo.category}
+                        onChange={(e) => updateCategory(photo.id, e.target.value)}
+                      >
+                        <option value="" disabled hidden>
+                          Uncategorized
+                        </option>
+                        {PHOTO_CATEGORIES.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="photo-meta">
+                        <span className="photo-order">#{index + 1}</span>
+                        <button className="photo-delete" onClick={() => handleDelete(photo.id)}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

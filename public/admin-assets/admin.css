@@ -108,9 +108,15 @@
 }
 
 .upload-zone {
+  /* A <label> is display: inline by default -- with a border and content
+     that wraps onto more than one line (the text, then the file input on
+     its own line below), an inline element draws its border/background
+     as separate boxes per line fragment instead of one enclosing box.
+     That's the "broken dashed border" bug: block makes it one real box. */
+  display: block;
   border: 1px dashed rgba(245, 243, 238, 0.35);
   border-radius: 4px;
-  padding: 2rem;
+  padding: 1.25rem;
   text-align: center;
   margin-bottom: 2.5rem;
   font-family: 'Jost', sans-serif;
@@ -205,6 +211,42 @@
 .pending-list > .cta:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.admin-category {
+  margin-bottom: 2.4rem;
+}
+
+.admin-category-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(245, 243, 238, 0.12);
+}
+
+.admin-category-head h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.admin-category-count {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.admin-category-empty {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+  opacity: 0.7;
+  margin: 0 0 1.5rem;
 }
 
 .photo-grid {
