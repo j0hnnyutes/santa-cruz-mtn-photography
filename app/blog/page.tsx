@@ -50,7 +50,12 @@ export default async function BlogIndexPage() {
               <div className="post-card-body">
                 <p className="post-date">{post.publishedAt ? formatDate(post.publishedAt) : ""}</p>
                 <h2>{post.title}</h2>
-                <p className="post-excerpt">{post.excerpt}</p>
+                <p className="post-excerpt">
+                  {post.excerpt}{" "}
+                  <span className="post-read-more">
+                    Read more <span aria-hidden="true">&rarr;</span>
+                  </span>
+                </p>
               </div>
             </a>
           ))}

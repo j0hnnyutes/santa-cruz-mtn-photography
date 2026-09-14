@@ -90,6 +90,24 @@
   margin: 0;
 }
 
+.post-read-more {
+  display: inline-block;
+  margin-left: 0.6rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  opacity: 0.7;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, letter-spacing 0.2s ease;
+}
+
+.post-card:hover .post-read-more {
+  opacity: 1;
+  letter-spacing: 0.12em;
+}
+
 /* First post in the list reads as a featured/lead story — spans two
    columns on wide screens where there's room for it to matter. */
 @media (min-width: 900px) {
