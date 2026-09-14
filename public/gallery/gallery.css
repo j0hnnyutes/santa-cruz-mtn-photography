@@ -62,8 +62,14 @@ html {
   border-color: var(--ink);
 }
 
+/* .site-nav is position: fixed (100px tall on desktop), so it sits on top
+   of the page rather than pushing content down -- a plain anchor jump
+   scrolls the section right underneath it with no clearance. This offset
+   accounts for the nav's real height (checked via getBoundingClientRect)
+   plus a comfortable gap, so the category heading always lands clearly
+   below the header, not tucked behind or against it. */
 .category-section {
-  scroll-margin-top: 1.2rem;
+  scroll-margin-top: 7.5rem;
 }
 
 .category-head {
@@ -147,6 +153,10 @@ html {
   }
   .mosaic-row {
     gap: 4px;
+  }
+  /* .site-nav is shorter on mobile (~69px vs ~100px) -- match that here. */
+  .category-section {
+    scroll-margin-top: 5rem;
   }
 }
 

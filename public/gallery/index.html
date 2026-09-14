@@ -346,6 +346,15 @@
         if (Object.values(photosByCategory).every((list) => list.length === 0)) {
           sectionsEl.innerHTML = '<p class="admin-empty" style="padding: 2rem 6vw; text-align: center;">No photos yet — check back soon.</p>';
         }
+
+        // A direct link like /gallery/#Events arrives before the section
+        // exists (sections only get built once photos have loaded), so the
+        // browser's native jump-to-hash has nothing to scroll to yet --
+        // finish that jump ourselves now that the target exists.
+        if (location.hash) {
+          const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+          if (target) target.scrollIntoView();
+        }
       })
       .catch(() => {
         sectionsEl.innerHTML = '<p class="admin-empty" style="padding: 2rem 6vw; text-align: center;">Couldn\'t load the gallery — try refreshing.</p>';
