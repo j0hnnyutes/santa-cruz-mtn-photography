@@ -253,6 +253,33 @@
       });
     }
 
+    // If the last section is short (few photos -- Aerial starts with just
+    // 2), the page may not have enough height below it for the browser to
+    // scroll that far: it hits the bottom of the document before the
+    // section's top can clear the fixed nav, landing short and exposing a
+    // sliver of the previous section (same visual bug the scroll-margin
+    // fix above addresses, just caused by running out of page instead of
+    // overshooting). Rather than a flat padding guess that would leave an
+    // empty gap before the footer on viewports that don't need it, measure
+    // exactly how much headroom THIS viewport is short by and add only
+    // that much.
+    function ensureScrollHeadroom() {
+      const sections = sectionsEl.querySelectorAll('.category-section');
+      if (!sections.length) return;
+      const lastSection = sections[sections.length - 1];
+
+      sectionsEl.style.paddingBottom = ''; // remeasure from the CSS floor each time
+      const scrollMarginTop = parseFloat(getComputedStyle(lastSection).scrollMarginTop) || 0;
+      const sectionDocTop = lastSection.getBoundingClientRect().top + window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const shortfall = (sectionDocTop - scrollMarginTop) - maxScroll;
+
+      if (shortfall > 0) {
+        const floor = parseFloat(getComputedStyle(sectionsEl).paddingBottom) || 0;
+        sectionsEl.style.paddingBottom = `${floor + shortfall + 4}px`; // +4px rounding safety
+      }
+    }
+
     // When a whole batch of photos shares one real aspect ratio (Jason's
     // camera always shoots 3:2, so his first 22 photos all do), the row
     // algorithm above still packs them mathematically correctly — it just
@@ -291,7 +318,10 @@
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderAllSections, 150);
+      resizeTimer = setTimeout(() => {
+        renderAllSections();
+        ensureScrollHeadroom();
+      }, 150);
     });
 
     // Builds the jump-nav pill + section shell (heading, count, empty
@@ -342,6 +372,7 @@
 
         buildSections();
         renderAllSections();
+        ensureScrollHeadroom();
 
         if (Object.values(photosByCategory).every((list) => list.length === 0)) {
           sectionsEl.innerHTML = '<p class="admin-empty" style="padding: 2rem 6vw; text-align: center;">No photos yet — check back soon.</p>';

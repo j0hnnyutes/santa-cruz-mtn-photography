@@ -14,6 +14,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* If the last category section is short (few photos, e.g. Aerial with
+   just 2), there isn't enough page height below it for the browser to
+   scroll that far -- it hits the bottom of the document before the
+   section's top can clear the fixed nav, landing short and exposing a
+   sliver of the previous section, same symptom as the scroll-margin fix
+   above but caused by running out of page rather than overshooting. A
+   flat padding-bottom large enough to always prevent that would leave a
+   very visible empty gap before the footer on ordinary short viewports,
+   so this is measured and set in JS instead (see ensureScrollHeadroom in
+   the inline script) -- exactly as much as the current viewport needs,
+   nothing on viewports that don't. This is just a floor for that.
+   */
+#gallerySections {
+  padding-bottom: 2rem;
+}
+
 .gallery-intro {
   padding: 6rem 6vw 1.5rem;
   text-align: center;
@@ -65,11 +81,16 @@ html {
 /* .site-nav is position: fixed (100px tall on desktop), so it sits on top
    of the page rather than pushing content down -- a plain anchor jump
    scrolls the section right underneath it with no clearance. This offset
-   accounts for the nav's real height (checked via getBoundingClientRect)
-   plus a comfortable gap, so the category heading always lands clearly
-   below the header, not tucked behind or against it. */
+   must not exceed the nav's real height (checked via
+   getBoundingClientRect): overshooting it opens a gap between the nav's
+   bottom edge and the section's top edge that shows whatever was scrolled
+   into it -- in practice, a sliver of the *previous* section's last photo
+   row, since sections sit flush against each other. Landing the section's
+   top at or just behind the nav instead keeps that gap solid black; the
+   actual breathing room below the nav comes from category-head's own
+   padding, which is guaranteed to be blank. */
 .category-section {
-  scroll-margin-top: 7.5rem;
+  scroll-margin-top: 6rem;
 }
 
 .category-head {
@@ -82,7 +103,7 @@ html {
 }
 
 .category-section:first-of-type .category-head {
-  padding-top: 0.5rem;
+  padding-top: 1.25rem;
 }
 
 .category-head h2 {
@@ -154,9 +175,10 @@ html {
   .mosaic-row {
     gap: 4px;
   }
-  /* .site-nav is shorter on mobile (~69px vs ~100px) -- match that here. */
+  /* .site-nav is shorter on mobile (~69px vs ~100px) -- match that here,
+     same must-not-overshoot reasoning as the desktop rule above. */
   .category-section {
-    scroll-margin-top: 5rem;
+    scroll-margin-top: 4rem;
   }
 }
 
