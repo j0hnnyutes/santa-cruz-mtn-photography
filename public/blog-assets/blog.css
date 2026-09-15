@@ -91,8 +91,13 @@
 }
 
 .post-read-more {
-  display: inline-block;
-  margin-left: 0.6rem;
+  /* No margin-left here on purpose: margin on an inline-block box still
+     applies at its own edge even when that edge lands at the very start
+     of a wrapped line, which is what caused the indent. A plain space
+     character (see the JSX) does the same job when this sits on the same
+     line as the excerpt, and -- unlike margin -- collapses away on its
+     own when it falls right at the line break instead. */
+  display: inline;
   font-family: 'Jost', sans-serif;
   font-size: 0.68rem;
   letter-spacing: 0.08em;
